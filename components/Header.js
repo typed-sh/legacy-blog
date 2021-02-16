@@ -4,34 +4,93 @@ import {
   Flex,
   Spacer,
   Heading,
-  Link as StyledLink
+  Link as StyledLink,
+  ButtonGroup,
+  IconButton,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  useColorMode
 } from '@chakra-ui/react'
+import {
+  RiSunLine,
+  RiMoonLine,
+  RiTwitterFill,
+  RiFileSearchLine
+} from 'react-icons/ri'
 
 import { headers } from '../config'
 
 const Header = props => {
+  const { colorMode, toggleColorMode } = useColorMode()
+  const iconButtonHoverStyles = {
+    backgroundColor: 'gray.800'
+  }
+
   return (
     <Flex
-      padding='20px 0'
+      padding={['9px 0', '7px 0']}
+      align='center'
     >
       {
         headers.map((header, hKey) => {
           return (
             <Heading
               key={hKey}
-              as={StyledLink}
               size='xs'
               paddingRight='16px'
-              fontWeight='700'
+              fontWeight='bold'
+              color='gray.200'
             >
-              <Link href={header.href || '#'}>
+              <StyledLink as={Link} href={header.href || '#'}>
                 {header.name}
-              </Link>
+              </StyledLink>
             </Heading>
           )
         })
       }
       <Spacer />
+      <InputGroup
+        size='md'
+        maxWidth='350px'
+        display={['none', 'block']}
+      >
+        <InputLeftElement pointerEvents='none'>
+          <RiFileSearchLine color='#E2E8F0' />
+        </InputLeftElement>
+        <Input
+          variant='filled'
+          placeholder='Search...'
+          color='gray.300'
+          fontSize='14px'
+          background='gray.700'
+          _hover={{
+            background: 'gray.700'
+          }}
+        />
+      </InputGroup>
+      <Spacer />
+      <ButtonGroup
+        size='sm'
+        variant='ghost'
+        color='gray.200'
+        background='black'
+        spacing='0.2rem'
+      >
+        <IconButton
+          icon={
+            colorMode === 'light'
+              ? <RiSunLine />
+              : <RiMoonLine />
+          }
+          onClick={toggleColorMode}
+          _hover={iconButtonHoverStyles}
+        />
+        <IconButton
+          icon={<RiTwitterFill />}
+          _hover={iconButtonHoverStyles}
+        />
+      </ButtonGroup>
     </Flex>
   )
 }

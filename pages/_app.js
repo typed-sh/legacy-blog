@@ -1,18 +1,20 @@
 import * as React from 'react'
+import * as PropTypes from 'prop-types'
 import { ChakraProvider } from '@chakra-ui/react'
 
 import theme from '../styles/theme'
 
-import Container from '../components/Container'
-
 const App = ({ Component, pageProps }) => {
   return (
     <ChakraProvider theme={theme}>
-      <Container>
-        <Component {...pageProps} />
-      </Container>
+      <Component {...pageProps} />
     </ChakraProvider>
   )
+}
+
+App.propTypes = {
+  Component: PropTypes.any,
+  pageProps: PropTypes.any
 }
 
 export default App

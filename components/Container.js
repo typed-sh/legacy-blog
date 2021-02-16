@@ -6,7 +6,7 @@ import {
 
 const Container = props => {
   return (
-    <StyledContainer maxW={props.width || '1100px'}>
+    <StyledContainer maxW={props.width || '1000px'}>
       {props.children}
     </StyledContainer>
   )

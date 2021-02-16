@@ -8,6 +8,7 @@ module.exports = {
     'standard-jsx',
     'standard-react'
   ],
+  parser: 'babel-eslint',
   parserOptions: {
     ecmaFeatures: {
       jsx: true
