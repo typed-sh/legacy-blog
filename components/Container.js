@@ -4,10 +4,13 @@ import {
   Container as StyledContainer
 } from '@chakra-ui/react'
 
-const Container = props => {
+const Container = ({ children, width, ...rest }) => {
   return (
-    <StyledContainer maxW={props.width || '1000px'}>
-      {props.children}
+    <StyledContainer
+      maxW={width || '1000px'}
+      {...rest}
+    >
+      {children}
     </StyledContainer>
   )
 }

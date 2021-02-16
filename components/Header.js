@@ -7,16 +7,12 @@ import {
   Link as StyledLink,
   ButtonGroup,
   IconButton,
-  Input,
-  InputGroup,
-  InputLeftElement,
   useColorMode
 } from '@chakra-ui/react'
 import {
   RiSunLine,
   RiMoonLine,
-  RiTwitterFill,
-  RiFileSearchLine
+  RiTwitterFill
 } from 'react-icons/ri'
 
 import { headers } from '../config'
@@ -29,7 +25,7 @@ const Header = props => {
 
   return (
     <Flex
-      padding={['9px 0', '7px 0']}
+      padding='9px 0'
       align='center'
     >
       {
@@ -49,26 +45,6 @@ const Header = props => {
           )
         })
       }
-      <Spacer />
-      <InputGroup
-        size='md'
-        maxWidth='350px'
-        display={['none', 'block']}
-      >
-        <InputLeftElement pointerEvents='none'>
-          <RiFileSearchLine color='#E2E8F0' />
-        </InputLeftElement>
-        <Input
-          variant='filled'
-          placeholder='Search...'
-          color='gray.300'
-          fontSize='14px'
-          background='gray.700'
-          _hover={{
-            background: 'gray.700'
-          }}
-        />
-      </InputGroup>
       <Spacer />
       <ButtonGroup
         size='sm'
