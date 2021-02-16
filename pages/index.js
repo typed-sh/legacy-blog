@@ -42,7 +42,7 @@ const Page = props => {
         >
           <Center>
             <Image
-              width='90px'
+              width='95px'
               paddingRight='4px'
               src='/typed.icon.png'
             />

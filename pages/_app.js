@@ -4,6 +4,9 @@ import { ChakraProvider } from '@chakra-ui/react'
 
 import theme from '../styles/theme'
 
+import '../styles/fonts.css'
+import '../styles/selection.css'
+
 const App = ({ Component, pageProps }) => {
   return (
     <ChakraProvider theme={theme}>
