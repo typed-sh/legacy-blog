@@ -4,7 +4,8 @@ const headers = [
     href: '/'
   },
   {
-    name: 'About'
+    name: 'About',
+    href: '/about'
   }
 ]
 
