@@ -8,7 +8,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint --verbose --ext .js"
+    "lint": "eslint --ext .js"
   },
   "dependencies": {
     "@chakra-ui/react": "^1.3.3",
