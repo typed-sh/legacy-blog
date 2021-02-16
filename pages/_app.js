@@ -3,10 +3,14 @@ import { ChakraProvider } from '@chakra-ui/react'
 
 import theme from '../styles/theme'
 
+import Container from '../components/Container'
+
 const App = ({ Component, pageProps }) => {
   return (
     <ChakraProvider theme={theme}>
-      <Component {...pageProps} />
+      <Container>
+        <Component {...pageProps} />
+      </Container>
     </ChakraProvider>
   )
 }

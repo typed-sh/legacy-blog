@@ -6,14 +6,18 @@ import {
 
 const Container = props => {
   return (
-    <StyledContainer>
+    <StyledContainer maxW={props.width || '1100px'}>
       {props.children}
     </StyledContainer>
   )
 }
 
 Container.propTypes = {
-  children: PropTypes.any
+  children: PropTypes.any,
+  width: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number
+  ])
 }
 
 export default Container
