@@ -4,9 +4,10 @@ import * as ChakraModules from '@chakra-ui/react'
 import Link from 'next/link'
 import MDXRuntime from '@mdx-js/runtime'
 import Highlight, { defaultProps } from 'prism-react-renderer'
+
 import dracula from 'prism-react-renderer/themes/dracula'
 
-const moduleNames = Object.keys(ChakraModules)
+import * as TypedModules from './Typed'
 
 const a = props => {
   const { href, ...rest } = props
@@ -80,6 +81,26 @@ blockquote.propTypes = {
   children: PropTypes.any
 }
 
+const img = props => {
+  const { src, ...rest } = props
+
+  return (
+    <ChakraModules.Center>
+      <ChakraModules.Image
+        src={src}
+        margin='14px 0'
+        shadow='md'
+        borderRadius='md'
+        {...rest}
+      />
+    </ChakraModules.Center>
+  )
+}
+
+img.propTypes = {
+  src: PropTypes.string
+}
+
 const components = {
   h1: props => <ChakraModules.Heading as='h1' size='2xl' margin='26px 0' {...props} />,
   h2: props => <ChakraModules.Heading as='h2' size='xl' margin='20px 0' {...props} />,
@@ -92,18 +113,39 @@ const components = {
   hr: props => <ChakraModules.Divider margin='9px 0' {...props} />,
   inlineCode: props => <ChakraModules.Code {...props} />,
   code,
-  blockquote
+  blockquote,
+  img,
+  ...TypedModules
 }
 
-for (let i = 0, l = moduleNames.length; i < l; i++) {
-  const moduleName = moduleNames[i]
+const chakraNS = Object.keys(ChakraModules)
 
-  components[moduleName] = ChakraModules[moduleName]
+for (let i = 0, l = chakraNS.length; i < l; i++) {
+  const key = chakraNS[i]
+  const first = key[0]
+
+  if (first !== first.toUpperCase()) {
+    continue
+  }
+
+  components[key] = ChakraModules[key]
 }
 
 const MDXProvider = props => {
+  const { colorMode, toggleColorMode } = ChakraModules.useColorMode()
+  const toast = ChakraModules.useToast()
+
+  const scope = {
+    isLightMode: colorMode === 'light',
+    toast,
+    toggleColorMode
+  }
+
   return (
-    <MDXRuntime components={components}>
+    <MDXRuntime
+      components={components}
+      scope={scope}
+    >
       {props.children}
     </MDXRuntime>
   )
