@@ -91,6 +91,7 @@ const img = props => {
         margin='14px 0'
         shadow='md'
         borderRadius='md'
+        crossOrigin='anonymous'
         {...rest}
       />
     </ChakraModules.Center>

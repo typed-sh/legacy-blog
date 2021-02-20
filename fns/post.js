@@ -4,7 +4,9 @@ import matter from 'gray-matter'
 
 const postsRoot = path.resolve(process.cwd(), './contents/posts')
 
-export const cache = {}
+export const cache = {
+  post: {}
+}
 
 export const getList = force => {
   if (cache.list && !force) {
@@ -34,14 +36,20 @@ export const bySlug = slug => {
   const list = getList()
 
   if (!list[slug]) {
-    return false
+    return {}
+  }
+  if (cache.post[slug]) {
+    return cache.post[slug]
   }
 
   const postPath = path.join(postsRoot, list[slug], 'index.mdx')
   const source = fs.readFileSync(postPath)
   const result = matter(source)
 
+  result.data.slug = slug
   result.data.source = list[slug]
+
+  cache.post[slug] = result
 
   return result
 }

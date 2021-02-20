@@ -18,7 +18,7 @@ export const byId = identifier => {
   const list = getList()
 
   if (list.indexOf(identifier) < 0) {
-    return false
+    return {}
   }
 
   return authors[identifier]

@@ -86,7 +86,10 @@ const Page = ({ user, data, mdxModule }) => {
 }
 
 Page.propTypes = {
-  user: PropTypes.object,
+  user: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.bool
+  ]),
   data: PropTypes.object,
   mdxModule: PropTypes.any
 }

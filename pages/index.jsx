@@ -1,4 +1,6 @@
 import * as React from 'react'
+import * as PropTypes from 'prop-types'
+import Link from 'next/link'
 import {
   Box,
   IconButton,
@@ -12,6 +14,7 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
+  Link as StyledLink,
   useColorMode
 } from '@chakra-ui/react'
 import {
@@ -21,6 +24,10 @@ import {
 
 import Container from '../components/Container'
 import Header from '../components/Header'
+import Post from '../components/Post'
+
+import * as author from '../fns/author'
+import * as post from '../fns/post'
 
 const Page = props => {
   const { colorMode } = useColorMode()
@@ -63,7 +70,7 @@ const Page = props => {
             Just a blog, __init__?
           </Text>
           <HStack
-            padding='25px 0'
+            paddingTop='25px'
           >
             <InputGroup
               size='md'
@@ -84,8 +91,68 @@ const Page = props => {
         </VStack>
       </Container>
       <Divider />
+      <Container>
+        <Box
+          margin='28px 0'
+        >
+          <Post {...props.posts[0]} />
+          <VStack
+            margin='24px 0'
+            divider={<Divider />}
+            spacing={4}
+            align='stretch'
+          >
+            {
+              props.posts.map((article, key) => {
+                if (!key) return null
+
+                return (
+                  <StyledLink key={key} href={'/post/' + article.slug}>
+                    <Link href={'/post/' + article.slug}>
+                      <Box>
+                        <Heading size='lg'>
+                          {article.title}
+                        </Heading>
+                        <Text margin='4px 0'>
+                          {article.sort}
+                        </Text>
+                      </Box>
+                    </Link>
+                  </StyledLink>
+                )
+              })
+            }
+          </VStack>
+        </Box>
+      </Container>
     </>
   )
+}
+
+Page.propTypes = {
+  posts: PropTypes.array
+}
+
+export const getStaticProps = async ctx => {
+  const posts = Object
+    .keys(post.getList())
+    .map(slug => {
+      const { data } = post.bySlug(slug)
+
+      data.date = new Date(data.date).getTime()
+      data.author = author.byId(data.author)
+
+      return data
+    })
+    .sort((a, b) => {
+      return b.date - a.date
+    })
+
+  return {
+    props: {
+      posts
+    }
+  }
 }
 
 export default Page
