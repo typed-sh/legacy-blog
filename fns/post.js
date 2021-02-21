@@ -47,3 +47,27 @@ export const bySlug = slug => {
 
   return result
 }
+
+export const byAuthor = (author, force) => {
+  const key = 'list_' + author
+
+  if (cache[key] && !force) {
+    return cache[key]
+  }
+
+  const list = Object.keys(getList())
+  const result = []
+
+  for (let i = 0, l = list.length; i < l; i++) {
+    const slug = list[i]
+    const { data } = bySlug(slug)
+
+    if (data.author === author) {
+      result.push(data)
+    }
+  }
+
+  cache[key] = result
+
+  return result
+}

@@ -2,6 +2,7 @@ import * as React from 'react'
 import * as PropTypes from 'prop-types'
 import dayjs from 'dayjs'
 import Link from 'next/link'
+import CryptoJS from 'crypto-js'
 import {
   Box,
   Center,
@@ -42,16 +43,20 @@ const Page = ({ user, data, mdxModule }) => {
         <Divider margin='9px 0' />
         <HStack margin='16px 0'>
           <Avatar
+            src={user.avatar || `https://www.gravatar.com/avatar/${CryptoJS.MD5(user.email)}`}
             name={user.name}
+            background='transparent'
           />
           <Box>
             <Link href={`/author/${data.author}`}>
-              <Heading
-                as={StyledLink}
-                size='md'
-              >
-                {user.name}
-              </Heading>
+              <StyledLink href={`/author/${data.author}`}>
+                <Heading
+                  as={StyledLink}
+                  size='md'
+                >
+                  {user.name}
+                </Heading>
+              </StyledLink>
             </Link>
             <Text>
               {dayjs(data.date).format('DD/MM/YYYY')}
@@ -63,7 +68,7 @@ const Page = ({ user, data, mdxModule }) => {
         data.thumbnail && (
           <Container
             as={Center}
-            width='1250px'
+            width='1100px'
           >
             <Image
               src={data.thumbnail}

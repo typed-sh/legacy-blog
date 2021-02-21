@@ -2561,6 +2561,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"crypto-js@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "crypto-js@npm:4.0.0"
+  checksum: fdd1415b9e4b317f6ac7f055a00495dabea6aa93ab82ccd63866b0a76d2da9587942764816a8a7976cb23b8bbfd7eea23ccb852b3fef218d166cc5db8c008ab3
+  languageName: node
+  linkType: hard
+
 "css-box-model@npm:1.2.1":
   version: 1.2.1
   resolution: "css-box-model@npm:1.2.1"
@@ -6842,6 +6849,7 @@ fsevents@~2.3.1:
     "@mdx-js/runtime": ^1.6.22
     "@next/mdx": ^10.0.7
     babel-eslint: ^10.1.0
+    crypto-js: ^4.0.0
     dayjs: ^1.10.4
     eslint: ^7.20.0
     eslint-config-standard: ^16.0.2

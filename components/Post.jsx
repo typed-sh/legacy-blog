@@ -49,7 +49,7 @@ const Post = props => {
         marginLeft={[0, 4, 6]}
       >
         <Link href={'/post/' + props.data.slug}>
-          <StyledLink>
+          <StyledLink href={'/post/' + props.data.slug}>
             <Heading size='lg'>
               {props.data.title}
             </Heading>
