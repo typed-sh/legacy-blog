@@ -2627,6 +2627,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dayjs@npm:^1.10.4":
+  version: 1.10.4
+  resolution: "dayjs@npm:1.10.4"
+  checksum: 3b7bb2232fff808209870bc72d4b2000941a1aa45f0226e2907f9dd1dda306d4b3a1eb9058450fd2c324b01a007a37809ac6f9b525806a86902c55e2934cd5d5
+  languageName: node
+  linkType: hard
+
 "debug@npm:^2.6.9":
   version: 2.6.9
   resolution: "debug@npm:2.6.9"
@@ -6835,6 +6842,7 @@ fsevents@~2.3.1:
     "@mdx-js/runtime": ^1.6.22
     "@next/mdx": ^10.0.7
     babel-eslint: ^10.1.0
+    dayjs: ^1.10.4
     eslint: ^7.20.0
     eslint-config-standard: ^16.0.2
     eslint-config-standard-jsx: ^10.0.0

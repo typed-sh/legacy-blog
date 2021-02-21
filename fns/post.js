@@ -1,12 +1,10 @@
-import fs from 'fs'
-import path from 'path'
-import matter from 'gray-matter'
+import * as fs from 'fs'
+import * as path from 'path'
+import * as matter from 'gray-matter'
 
 const postsRoot = path.resolve(process.cwd(), './contents/posts')
 
-export const cache = {
-  post: {}
-}
+export const cache = {}
 
 export const getList = force => {
   if (cache.list && !force) {
@@ -36,10 +34,7 @@ export const bySlug = slug => {
   const list = getList()
 
   if (!list[slug]) {
-    return {}
-  }
-  if (cache.post[slug]) {
-    return cache.post[slug]
+    return
   }
 
   const postPath = path.join(postsRoot, list[slug], 'index.mdx')
@@ -49,8 +44,6 @@ export const bySlug = slug => {
   result.data.slug = slug
   result.data.source = list[slug]
   result.data.date = new Date(result.data.date).getTime()
-
-  cache.post[slug] = result
 
   return result
 }

@@ -1,5 +1,6 @@
 import * as React from 'react'
 import * as PropTypes from 'prop-types'
+import dayjs from 'dayjs'
 import Link from 'next/link'
 import {
   Box,
@@ -44,7 +45,7 @@ const Page = ({ user, data, mdxModule }) => {
             name={user.name}
           />
           <Box>
-            <Link href={`/author/${user.name}`}>
+            <Link href={`/author/${data.author}`}>
               <Heading
                 as={StyledLink}
                 size='md'
@@ -53,7 +54,7 @@ const Page = ({ user, data, mdxModule }) => {
               </Heading>
             </Link>
             <Text>
-              {user.sort}
+              {dayjs(data.date).format('DD/MM/YYYY')}
             </Text>
           </Box>
         </HStack>

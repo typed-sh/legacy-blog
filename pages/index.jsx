@@ -107,14 +107,14 @@ const Page = props => {
                 if (!key) return null
 
                 return (
-                  <StyledLink key={key} href={'/post/' + article.slug}>
-                    <Link href={'/post/' + article.slug}>
+                  <StyledLink key={key} href={'/post/' + article.data.slug}>
+                    <Link href={'/post/' + article.data.slug}>
                       <Box>
                         <Heading size='lg'>
-                          {article.title}
+                          {article.data.title}
                         </Heading>
                         <Text margin='4px 0'>
-                          {article.sort}
+                          {article.data.sort}
                         </Text>
                       </Box>
                     </Link>
@@ -138,11 +138,12 @@ export const getStaticProps = async ctx => {
     .keys(post.getList())
     .map(slug => {
       const { data } = post.bySlug(slug)
+      const user = author.byId(data.author)
 
-      data.date = new Date(data.date).getTime()
-      data.author = author.byId(data.author)
-
-      return data
+      return {
+        data,
+        user
+      }
     })
     .sort((a, b) => {
       return b.date - a.date

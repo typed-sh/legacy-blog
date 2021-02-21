@@ -22,12 +22,12 @@ const Post = props => {
         flexShrink={1}
         flexBasis='auto'
       >
-        <Link href={'/post/' + props.slug}>
+        <Link href={'/post/' + props.data.slug}>
           <StyledLink>
             {
-              props.thumbnail && (
+              props.data.thumbnail && (
                 <Image
-                  src={props.thumbnail}
+                  src={props.data.thumbnail}
                   shadow='lg'
                   borderRadius='md'
                   crossOrigin='anonymous'
@@ -48,13 +48,13 @@ const Post = props => {
         marginTop={2}
         marginLeft={[0, 4, 6]}
       >
-        <Link href={'/post/' + props.slug}>
+        <Link href={'/post/' + props.data.slug}>
           <StyledLink>
             <Heading size='lg'>
-              {props.title}
+              {props.data.title}
             </Heading>
             <Text margin='4px 0'>
-              {props.sort}
+              {props.data.sort}
             </Text>
           </StyledLink>
         </Link>
@@ -64,10 +64,7 @@ const Post = props => {
 }
 
 Post.propTypes = {
-  thumbnail: PropTypes.string,
-  title: PropTypes.string,
-  sort: PropTypes.string,
-  slug: PropTypes.string
+  data: PropTypes.object
 }
 
 export default Post
