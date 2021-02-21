@@ -2,6 +2,7 @@ import * as React from 'react'
 import * as PropTypes from 'prop-types'
 import dayjs from 'dayjs'
 import Link from 'next/link'
+import { NextSeo } from 'next-seo'
 import CryptoJS from 'crypto-js'
 import {
   Box,
@@ -21,10 +22,15 @@ import MDXProvider from '../../components/MDXProvider'
 
 import * as author from '../../fns/author'
 import * as post from '../../fns/post'
+import * as site from '../../fns/site'
 
 const Page = ({ user, data, mdxModule }) => {
   return (
     <>
+      <NextSeo
+        title={`${data.title} | ${site.name}`}
+        description={data.sort}
+      />
       <Box
         background='black'
         marginBottom='25px'

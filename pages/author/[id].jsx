@@ -2,6 +2,7 @@ import * as React from 'react'
 import * as PropTypes from 'prop-types'
 import CryptoJS from 'crypto-js'
 import Link from 'next/link'
+import { NextSeo } from 'next-seo'
 import {
   Box,
   Avatar,
@@ -22,12 +23,17 @@ import Header from '../../components/Header'
 
 import * as author from '../../fns/author'
 import * as post from '../../fns/post'
+import * as site from '../../fns/site'
 
 const Page = ({ user, posts }) => {
   const avatarURL = user.avatar || `https://www.gravatar.com/avatar/${CryptoJS.MD5(user.email)}`
 
   return (
     <>
+      <NextSeo
+        title={`${user.name} | ${site.name}`}
+        description={user.bio}
+      />
       <Box
         background='black'
         marginBottom='25px'
@@ -67,7 +73,7 @@ const Page = ({ user, posts }) => {
             </Box>
             {
               user.email && (
-                <Badge as={StyledLink} href={`mailto:${user.email}`} marginRight='8px'>
+                <Badge as={StyledLink} href={`mailto:${user.email}`} marginLeft='4px' marginRight='8px'>
                   Email
                 </Badge>
               )

@@ -1,5 +1,6 @@
 import * as React from 'react'
 import * as PropTypes from 'prop-types'
+import Head from 'next/head'
 import Link from 'next/link'
 import {
   Box,
@@ -28,6 +29,7 @@ import Post from '../components/Post'
 
 import * as author from '../fns/author'
 import * as post from '../fns/post'
+import * as site from '../fns/site'
 
 const Page = props => {
   const { colorMode } = useColorMode()
@@ -37,6 +39,9 @@ const Page = props => {
       <Box
         background='black'
       >
+        <Head>
+          <title>{site.name}</title>
+        </Head>
         <Container>
           <Header />
         </Container>

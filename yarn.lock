@@ -4751,6 +4751,17 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
+"next-seo@npm:^4.20.0":
+  version: 4.20.0
+  resolution: "next-seo@npm:4.20.0"
+  peerDependencies:
+    next: ^8.1.1-canary.54 || ^9.0.0 || ^10.0.0
+    react: ^16.0.0 || ^17.0.0
+    react-dom: ^16.0.0 || ^17.0.0
+  checksum: 3115e94326193da205d8fba3177de620abbe1d6684b9e868a933f18c2233bb3076df466c126a6a1b54bf56bd3a1209a9b2bd7320bf5fc7ad210ecf1cc62cf80c
+  languageName: node
+  linkType: hard
+
 "next@npm:^10.0.7":
   version: 10.0.7
   resolution: "next@npm:10.0.7"
@@ -6866,6 +6877,7 @@ fsevents@~2.3.1:
     next: ^10.0.7
     next-compose-plugins: ^2.2.1
     next-images: ^1.7.0
+    next-seo: ^4.20.0
     prism-react-renderer: ^1.1.1
     prop-types: ^15.7.2
     react: ^17.0.1
