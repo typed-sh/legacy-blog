@@ -48,6 +48,7 @@ export const bySlug = slug => {
 
   result.data.slug = slug
   result.data.source = list[slug]
+  result.data.date = new Date(result.data.date).getTime()
 
   cache.post[slug] = result
 
