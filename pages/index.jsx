@@ -54,7 +54,7 @@ const Page = props => {
             <Image
               width='95px'
               paddingRight='4px'
-              src='/typed.icon.png'
+              src='/static/typed.icon.png'
             />
             <Heading
               size='2xl'
