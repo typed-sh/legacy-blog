@@ -16,6 +16,7 @@ import {
 } from 'react-icons/ri'
 
 import { headers } from '../config'
+import * as site from '../fns/site'
 
 const Header = props => {
   const { colorMode, toggleColorMode } = useColorMode()
@@ -64,6 +65,7 @@ const Header = props => {
         />
         <IconButton
           icon={<RiTwitterFill />}
+          onClick={() => window.open(`https://twitter.com/${site.twitter}`, '_blank')}
           _hover={iconButtonHoverStyles}
         />
       </ButtonGroup>

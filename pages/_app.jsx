@@ -10,6 +10,8 @@ import theme from '../styles/theme'
 import '../styles/fonts.css'
 import '../styles/selection.css'
 
+import Footer from '../components/Footer'
+
 const App = ({ Component, pageProps }) => {
   return (
     <ChakraProvider theme={theme}>
@@ -18,6 +20,7 @@ const App = ({ Component, pageProps }) => {
         description='Just a blog, __init__?'
       />
       <Component {...pageProps} />
+      <Footer />
     </ChakraProvider>
   )
 }
