@@ -34,6 +34,16 @@ const Page = ({ user, posts }) => {
       <NextSeo
         title={`${user.name} | ${site.name}`}
         description={user.bio}
+        twitter={{
+          cardType: 'summary',
+          site: site.twitter,
+          handle: user.twitter || site.twitter
+        }}
+        openGraph={{
+          type: 'article',
+          title: `${user.name} on ${site.title}`,
+          description: user.bio
+        }}
       />
       <Box
         background='black'

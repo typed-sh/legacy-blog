@@ -31,6 +31,22 @@ const Page = ({ user, data, mdxModule }) => {
       <NextSeo
         title={`${data.title} | ${site.name}`}
         description={data.sort}
+        twitter={{
+          cardType: data.thumbnail ? 'summary_large_image' : 'summary',
+          site: site.twitter,
+          handle: user.twitter || site.twitter
+        }}
+        openGraph={{
+          type: 'article',
+          title: data.title,
+          description: data.sort,
+          images: [
+            {
+              url: data.thumbnail,
+              alt: `Thumbnail of ${data.title} on ${site.title}.`
+            }
+          ]
+        }}
       />
       <Box
         background='black'

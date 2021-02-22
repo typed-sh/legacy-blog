@@ -19,12 +19,16 @@ export default async () => {
   const authors = author.getList()
 
   for (let i = 0, l = posts.length; i < l; i++) {
-    const post = posts[i]
+    const slug = posts[i]
+    const { article } = post.bySlug(slug)
 
     sitemap.write({
-      url: '/post/' + post,
+      url: '/post/' + slug,
       changefreq,
-      priority
+      priority,
+      img: {
+        url: article.thumbnail
+      }
     })
   }
   for (let i = 0, l = authors.length; i < l; i++) {

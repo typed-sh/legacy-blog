@@ -9,6 +9,8 @@ export default async (req, res) => {
     cache = data.toString()
   }
 
+  res.setHeader('Content-Type', 'text/xml')
+
   res.send(cache)
   res.end()
 }
