@@ -30,8 +30,19 @@ import * as author from '../fns/author'
 import * as post from '../fns/post'
 import * as site from '../fns/site'
 
+import useInput from '../hooks/useInput'
+
 const Page = props => {
   const { colorMode } = useColorMode()
+  const [search, setSearch] = useInput()
+
+  const searchOnGoogle = () => {
+    if (!search) {
+      return
+    }
+
+    window.location = 'https://www.google.com/search?q=' + encodeURIComponent('site:typed.sh ' + search)
+  }
 
   return (
     <>
@@ -76,9 +87,7 @@ const Page = props => {
           <HStack
             paddingTop='25px'
           >
-            <InputGroup
-              size='md'
-            >
+            <InputGroup size='md'>
               <InputLeftElement pointerEvents='none'>
                 <RiFileSearchLine />
               </InputLeftElement>
@@ -86,9 +95,17 @@ const Page = props => {
                 variant='filled'
                 placeholder='Search...'
                 fontSize='14px'
+                value={search}
+                onInput={setSearch}
+                onKeyPress={event => {
+                  if (event.key === 'Enter') {
+                    searchOnGoogle()
+                  }
+                }}
               />
             </InputGroup>
             <IconButton
+              onClick={searchOnGoogle}
               icon={<RiArrowRightLine />}
             />
           </HStack>
