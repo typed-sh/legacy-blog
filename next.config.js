@@ -12,6 +12,14 @@ module.exports = withPlugins(
     [withImages]
   ],
   {
+    rewrites: async () => {
+      return [
+        {
+          source: '/sitemap.xml',
+          destination: '/api/sitemap'
+        }
+      ]
+    },
     webpack: (config, { isServer }) => {
       if (!isServer) {
         config.node = {

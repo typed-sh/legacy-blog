@@ -17,6 +17,7 @@ import {
 } from '@chakra-ui/react'
 
 import Container from '../../components/Container'
+import Footer from '../../components/Footer'
 import Header from '../../components/Header'
 import MDXProvider from '../../components/MDXProvider'
 
@@ -93,6 +94,7 @@ const Page = ({ user, data, mdxModule }) => {
           </MDXProvider>
         </Box>
       </Container>
+      <Footer />
     </>
   )
 }

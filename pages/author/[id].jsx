@@ -19,6 +19,7 @@ import {
 } from 'react-icons/ri'
 
 import Container from '../../components/Container'
+import Footer from '../../components/Footer'
 import Header from '../../components/Header'
 
 import * as author from '../../fns/author'
@@ -109,6 +110,7 @@ const Page = ({ user, posts }) => {
           }
         </VStack>
       </Container>
+      <Footer />
     </>
   )
 }
