@@ -19,11 +19,15 @@ const Post = props => {
     >
       <Center
         flexGrow={1}
-        flexShrink={1}
-        flexBasis='auto'
+        flexShrink={2}
+        maxWidth={[
+          '100%',
+          '200px',
+          '250px'
+        ]}
       >
         <Link href={'/post/' + props.data.slug}>
-          <StyledLink>
+          <StyledLink href={'/post/' + props.data.slug}>
             {
               props.data.thumbnail && (
                 <Image
@@ -39,18 +43,13 @@ const Post = props => {
       </Center>
       <Box
         flexGrow={0}
-        flexShrink={0}
-        flexBasis={[
-          '200px',
-          '250px',
-          '300px'
-        ]}
-        marginTop={2}
+        flexShrink={1}
+        marginTop={[2, 0]}
         marginLeft={[0, 4, 6]}
       >
         <Link href={'/post/' + props.data.slug}>
           <StyledLink href={'/post/' + props.data.slug}>
-            <Heading size='lg'>
+            <Heading size='md'>
               {props.data.title}
             </Heading>
             <Text margin='4px 0'>

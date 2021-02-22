@@ -1,7 +1,6 @@
 import * as React from 'react'
 import * as PropTypes from 'prop-types'
 import Head from 'next/head'
-import Link from 'next/link'
 import {
   Box,
   IconButton,
@@ -15,7 +14,6 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
-  Link as StyledLink,
   useColorMode
 } from '@chakra-ui/react'
 import {
@@ -97,38 +95,18 @@ const Page = props => {
       </Container>
       <Divider />
       <Container>
-        <Box
-          margin='28px 0'
+        <VStack
+          margin='24px 0'
+          divider={<Divider />}
+          spacing={4}
+          align='stretch'
         >
-          <Post {...props.posts[0]} />
-          <VStack
-            margin='24px 0'
-            divider={<Divider />}
-            spacing={4}
-            align='stretch'
-          >
-            {
-              props.posts.map((article, key) => {
-                if (!key) return null
-
-                return (
-                  <StyledLink key={key} href={'/post/' + article.data.slug}>
-                    <Link href={'/post/' + article.data.slug}>
-                      <Box>
-                        <Heading size='lg'>
-                          {article.data.title}
-                        </Heading>
-                        <Text margin='4px 0'>
-                          {article.data.sort}
-                        </Text>
-                      </Box>
-                    </Link>
-                  </StyledLink>
-                )
-              })
-            }
-          </VStack>
-        </Box>
+          {
+            props.posts.map((article, key) => {
+              return <Post key={key} {...article} />
+            })
+          }
+        </VStack>
       </Container>
     </>
   )
