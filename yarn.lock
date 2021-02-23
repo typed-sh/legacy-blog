@@ -1368,16 +1368,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@next/mdx@npm:^10.0.7":
-  version: 10.0.7
-  resolution: "@next/mdx@npm:10.0.7"
-  peerDependencies:
-    "@mdx-js/loader": ">=0.15.0"
-    "@mdx-js/react": "*"
-  checksum: 6b57a83c492736eb8fad2f12abd4baa79923dc0956175c172b896146e1b9bf5e87c003c3b150edbc3c8d4ef5e0a628e36c8131ed9f49d64db4bcfce1693d78c1
-  languageName: node
-  linkType: hard
-
 "@next/polyfill-module@npm:10.0.7":
   version: 10.0.7
   resolution: "@next/polyfill-module@npm:10.0.7"
@@ -6937,7 +6927,6 @@ fsevents@~2.3.1:
     "@emotion/styled": ^11.1.5
     "@mdx-js/loader": ^1.6.22
     "@mdx-js/runtime": ^1.6.22
-    "@next/mdx": ^10.0.7
     babel-eslint: ^10.1.0
     crypto-js: ^4.0.0
     dayjs: ^1.10.4
