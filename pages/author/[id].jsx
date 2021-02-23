@@ -20,7 +20,6 @@ import {
 
 import Container from '../../components/Container'
 import Footer from '../../components/Footer'
-import Header from '../../components/Header'
 
 import * as author from '../../fns/author'
 import * as post from '../../fns/post'
@@ -45,14 +44,6 @@ const Page = ({ user, posts }) => {
           description: user.bio
         }}
       />
-      <Box
-        background='black'
-        marginBottom='25px'
-      >
-        <Container>
-          <Header />
-        </Container>
-      </Box>
       <Container>
         <VStack
           align='stretch'

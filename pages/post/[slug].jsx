@@ -18,7 +18,6 @@ import {
 
 import Container from '../../components/Container'
 import Footer from '../../components/Footer'
-import Header from '../../components/Header'
 import MDXProvider from '../../components/MDXProvider'
 
 import * as author from '../../fns/author'
@@ -48,14 +47,6 @@ const Page = ({ user, data, mdxModule }) => {
           ]
         }}
       />
-      <Box
-        background='black'
-        marginBottom='25px'
-      >
-        <Container>
-          <Header />
-        </Container>
-      </Box>
       <Container width='750px'>
         <Heading size='3xl' margin='20px 0'>
           {data.title}

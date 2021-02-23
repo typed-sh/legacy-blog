@@ -23,7 +23,6 @@ import {
 
 import Container from '../components/Container'
 import Footer from '../components/Footer'
-import Header from '../components/Header'
 import Post from '../components/Post'
 
 import * as author from '../fns/author'
@@ -52,9 +51,6 @@ const Page = props => {
         <Head>
           <title>{site.name}</title>
         </Head>
-        <Container>
-          <Header />
-        </Container>
       </Box>
       <Container>
         <VStack

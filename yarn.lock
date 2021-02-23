@@ -3455,15 +3455,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"framer-motion@npm:^3.3.0":
-  version: 3.3.0
-  resolution: "framer-motion@npm:3.3.0"
+"framer-motion@npm:^3.6.7":
+  version: 3.6.7
+  resolution: "framer-motion@npm:3.6.7"
   dependencies:
     "@emotion/is-prop-valid": ^0.8.2
-    framesync: ^5.0.0
+    framesync: ^5.1.0
     hey-listen: ^1.0.8
-    popmotion: ^9.1.0
-    style-value-types: ^4.0.1
+    popmotion: 9.2.1
+    style-value-types: 4.0.3
     tslib: ^1.10.0
   peerDependencies:
     react: ">=16.8"
@@ -3471,14 +3471,14 @@ __metadata:
   dependenciesMeta:
     "@emotion/is-prop-valid":
       optional: true
-  checksum: 91cdddbe01127c9af37e68abc33c5c33d9feb09f57c4736945391e31ad4e5ab05ba155403d03da501b4d7dfa3c31b4c0078216b12aaf9dbc713fb114736ba489
+  checksum: 0913aa73cc63191f37f0a69b3fe6ed5af856a801f77d4aa9e4aae238167fe1bf6f1a80fd8b21cb65a81ad285f6ceb323cbc01618d353f8708765e2898f9d8b39
   languageName: node
   linkType: hard
 
-"framesync@npm:5.0.0, framesync@npm:^5.0.0":
-  version: 5.0.0
-  resolution: "framesync@npm:5.0.0"
-  checksum: 3ae984748abe03710b4a60f35534c572ffd206f773a58c5d61da56397f4656ff8de7bc41be7eb83a3eb961dd24e95f379147818dec1aefda4c005d50a45681d9
+"framesync@npm:5.1.0, framesync@npm:^5.1.0":
+  version: 5.1.0
+  resolution: "framesync@npm:5.1.0"
+  checksum: 9dfccf7bfcd166506b83ac9f188906bf9c8bbe8d943966e71e8b2e67c52ddf1a37dcc3e990f6489aa7903a12cdab440babc8642ee41c70803baf5498daa8434b
   languageName: node
   linkType: hard
 
@@ -5390,15 +5390,15 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"popmotion@npm:^9.1.0":
-  version: 9.1.0
-  resolution: "popmotion@npm:9.1.0"
+"popmotion@npm:9.2.1":
+  version: 9.2.1
+  resolution: "popmotion@npm:9.2.1"
   dependencies:
-    framesync: 5.0.0
+    framesync: 5.1.0
     hey-listen: ^1.0.8
-    style-value-types: ^4.0.1
+    style-value-types: 4.0.3
     tslib: ^1.10.0
-  checksum: a8f0018217d85e0e0e0bbc82a224dad2494ae5a73b5b06208298fee0ea035d742e2707a6f41051d2f3662099cddf526a1425d8452c073df748c9dd77bb97f3d2
+  checksum: f7908017156a0ad7ac23142f777e3118563c4ae56e0ece8b382e33b7f05c82ce639b8330d5be47994c5a6db056ae082c08c0fd96fd542af5f5a9a9010e9e7459
   languageName: node
   linkType: hard
 
@@ -5457,12 +5457,12 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"prism-react-renderer@npm:^1.1.1":
-  version: 1.1.1
-  resolution: "prism-react-renderer@npm:1.1.1"
+"prism-react-renderer@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "prism-react-renderer@npm:1.2.0"
   peerDependencies:
     react: ">=0.14.9"
-  checksum: f3996b4fb45a620d806501b8b8c411e9084e779ef58986f45e988cc46759ae7dc9e27bd2a29dc7bff7cb9561d4ead8c8c66eeaba34bdbe65504dce66f718ee06
+  checksum: 794de7917da61f185c82e16766dfd0bdfbf78d36bc30136a7a94c3e05ce6994790508a09858a6065bad615641c5a8f32b0f4e546a6179538fe7dafb5c2a6e5d0
   languageName: node
   linkType: hard
 
@@ -5676,6 +5676,16 @@ fsevents@~2.3.1:
   peerDependencies:
     react: ^16.8.0 || ^17.0.0
   checksum: 92df64722be6f06b93c1246fa1fddb2897e5fc977d1d1c166ac14a19e272ec4e65908cee5780e3bc45f3be4c32717470900b61eeec061090ef4e08e08f37d8ae
+  languageName: node
+  linkType: hard
+
+"react-ga@npm:^3.3.0":
+  version: 3.3.0
+  resolution: "react-ga@npm:3.3.0"
+  peerDependencies:
+    prop-types: ^15.6.0
+    react: ^15.6.2 || ^16.0 || ^17
+  checksum: fe3dc0a7679b3a52df3944660f2b1f353ee5d24f73e4bdb88c8323e012e1042ef3c2c1a6e432d3c6e3196861162925ff9f5ba515a8112e11187d21d8a00cc863
   languageName: node
   linkType: hard
 
@@ -6600,13 +6610,13 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"style-value-types@npm:^4.0.1":
-  version: 4.0.1
-  resolution: "style-value-types@npm:4.0.1"
+"style-value-types@npm:4.0.3":
+  version: 4.0.3
+  resolution: "style-value-types@npm:4.0.3"
   dependencies:
     hey-listen: ^1.0.8
     tslib: ^1.10.0
-  checksum: ea10874c76075a65058edbf59299bbdcd86512d0a206c9e444f0234f0dab0b801cdfa19cb6984cc7c18b4fd93147811f32b39edb8192129922ce8bc2019e8327
+  checksum: 1f1fc2fdc5465a2f70a6b5dd0d2e6a462552b9fbf866e3d916af4cea492e96cc3c53e9167b4a1e4577ec8b1e4c9b198dcb374c52293885ce6304d6ace8fa0c98
   languageName: node
   linkType: hard
 
@@ -6941,7 +6951,7 @@ fsevents@~2.3.1:
     eslint-plugin-promise: ^4.3.1
     eslint-plugin-react: ^7.22.0
     esm: ^3.2.25
-    framer-motion: ^3.3.0
+    framer-motion: ^3.6.7
     gray-matter: ^4.0.2
     js-yaml: ^4.0.0
     js-yaml-loader: ^1.2.2
@@ -6949,10 +6959,11 @@ fsevents@~2.3.1:
     next-compose-plugins: ^2.2.1
     next-images: ^1.7.0
     next-seo: ^4.20.0
-    prism-react-renderer: ^1.1.1
+    prism-react-renderer: ^1.2.0
     prop-types: ^15.7.2
     react: ^17.0.1
     react-dom: ^17.0.1
+    react-ga: ^3.3.0
     react-icons: ^4.2.0
     sitemap: ^6.4.0
   languageName: unknown

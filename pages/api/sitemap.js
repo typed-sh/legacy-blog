@@ -14,3 +14,9 @@ export default async (req, res) => {
   res.send(cache)
   res.end()
 }
+
+export const config = {
+  api: {
+    bodyParser: false
+  }
+}
