@@ -24,7 +24,7 @@ const typedNS = Object.keys(TypedModules)
 for (let i = 0, l = typedNS.length; i < l; i++) {
   const file = typedNS[i]
 
-  components[initialToLowerCase(file)] = dynamic(() => import('./Typed/' + file))
+  components[file] = dynamic(() => import('./Typed/' + file))
 }
 
 const chakraNS = Object.keys(ChakraModules)
