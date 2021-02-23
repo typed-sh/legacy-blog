@@ -20,7 +20,7 @@ export default async () => {
 
   for (let i = 0, l = posts.length; i < l; i++) {
     const slug = posts[i]
-    const { article } = post.bySlug(slug)
+    const { data: article } = post.bySlug(slug)
 
     sitemap.write({
       url: '/post/' + slug,

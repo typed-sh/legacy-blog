@@ -8,7 +8,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "export": "next build && next export && node scripts/sitemap",
+    "export": "next build && next export && yarn node scripts/sitemap",
     "lint": "eslint --ext .js"
   },
   "dependencies": {

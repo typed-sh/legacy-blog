@@ -1,6 +1,6 @@
 import * as fs from 'fs'
 import * as path from 'path'
-import * as matter from 'gray-matter'
+import matter from 'gray-matter'
 
 const postsRoot = path.resolve(process.cwd(), './contents/posts')
 
