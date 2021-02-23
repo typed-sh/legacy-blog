@@ -22,6 +22,7 @@ import '../styles/selection.css'
 const App = ({ Component, pageProps }) => {
   const router = useRouter()
   const [show, setShow] = React.useState(false)
+  const [showtime, setShowtime] = React.useState(0)
 
   React.useEffect(() => {
     if (!window.__typedsh_analytics) {
@@ -37,8 +38,13 @@ const App = ({ Component, pageProps }) => {
     })
 
     // NOTE: Page animation;
-    router.events.on('routeChangeStart', () => setShow('hidden'))
-    router.events.on('routeChangeComplete', () => setShow('visible'))
+    router.events.on('routeChangeStart', () => {
+      setShow('hidden')
+      setShowtime(Date.now())
+    })
+    router.events.on('routeChangeComplete', () => {
+      setTimeout(() => setShow('visible'), Date.now() - showtime + (0.25 * 1000))
+    })
   }, [])
 
   return (
