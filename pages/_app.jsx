@@ -22,9 +22,11 @@ import '../styles/selection.css'
 const App = ({ Component, pageProps }) => {
   const router = useRouter()
   const [show, setShow] = React.useState(false)
-  const [showtime, setShowtime] = React.useState(0)
+  const [child, setChild] = React.useState(null)
 
   React.useEffect(() => {
+    setShow('visible')
+
     if (!window.__typedsh_analytics) {
       ReactGA.initialize(site.analytics)
 
@@ -36,16 +38,18 @@ const App = ({ Component, pageProps }) => {
     router.events.on('beforeHistoryChange', pathname => {
       ReactGA.pageview(pathname)
     })
-
-    // NOTE: Page animation;
+  }, [])
+  React.useEffect(() => {
     router.events.on('routeChangeStart', () => {
+      setChild(<Component {...pageProps} />)
       setShow('hidden')
-      setShowtime(Date.now())
     })
     router.events.on('routeChangeComplete', () => {
-      setTimeout(() => setShow('visible'), Date.now() - showtime + (0.25 * 1000))
+      setTimeout(() => {
+        setShow('visible')
+      }, 0.5 * 1000)
     })
-  }, [])
+  }, [router])
 
   return (
     <ChakraProvider theme={theme}>
@@ -62,7 +66,7 @@ const App = ({ Component, pageProps }) => {
         </Container>
       </Box>
       <motion.div
-        initial='visible'
+        initial='hidden'
         animate={show}
         variants={{
           hidden: {
@@ -74,7 +78,11 @@ const App = ({ Component, pageProps }) => {
         }}
         transition={{ duration: 0.27 }}
       >
-        <Component {...pageProps} />
+        {
+          show === 'visible'
+            ? <Component {...pageProps} />
+            : child
+        }
       </motion.div>
     </ChakraProvider>
   )
