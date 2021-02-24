@@ -10,7 +10,9 @@ import H6 from './H6'
 import Hr from './Hr'
 import Img from './Img'
 import InlineCode from './InlineCode'
+import Ol from './Ol'
 import P from './P'
+import Ul from './Ul'
 
 export {
   A,
@@ -25,5 +27,7 @@ export {
   Hr,
   Img,
   InlineCode,
-  P
+  Ol,
+  P,
+  Ul
 }
