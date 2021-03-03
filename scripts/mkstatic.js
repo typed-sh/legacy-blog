@@ -1,3 +1,5 @@
+console.log('Copying static assets from post directory')
+
 const esm = require('esm')
 const fs = require('fs')
 const path = require('path')
@@ -22,9 +24,13 @@ for (let i = 0, l = slugs.length; i < l; i++) {
     .readdirSync(postDir)
     .filter(filename => filename !== 'index.mdx')
 
+  console.log('Found new post:', slug, 'with', assets.length, 'assets')
+
   for (let k = 0, s = assets.length; k < s; k++) {
     const origin = path.join(postDir, assets[k])
     const target = path.join(assetsDir, assets[k])
+
+    console.log('Copying', origin, 'to', target)
 
     fs.copyFileSync(origin, target)
   }

@@ -1,5 +1,6 @@
 import * as React from 'react'
 import * as PropTypes from 'prop-types'
+import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { NextSeo } from 'next-seo'
 import {
@@ -41,6 +42,9 @@ const App = ({ Component, pageProps }) => {
         title={site.name}
         description='Just a blog, __init__?'
       />
+      <Head>
+        <link rel='shortcut icon' href='/static/typed.icon.png' />
+      </Head>
       <Box
         background='black'
         marginBottom='25px'

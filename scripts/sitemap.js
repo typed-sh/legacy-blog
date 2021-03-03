@@ -1,3 +1,5 @@
+console.log('Creating sitemap from directory hierarchy')
+
 const esm = require('esm')
 const fs = require('fs')
 const path = require('path')
@@ -12,4 +14,6 @@ sitemap
     const file = path.resolve(process.cwd(), 'out/sitemap.xml')
 
     fs.writeFileSync(file, data.toString(), 'utf8')
+
+    console.log('Wrote into', file)
   })
