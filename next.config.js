@@ -11,6 +11,10 @@ module.exports = withPlugins(
         {
           source: '/sitemap.xml',
           destination: '/api/sitemap'
+        },
+        {
+          source: '/post/:slug/:filename',
+          destination: '/api/assets/:slug/:filename'
         }
       ]
     },
@@ -35,6 +39,7 @@ module.exports = withPlugins(
       'jsx',
       'mdx'
     ],
-    poweredByHeader: false
+    poweredByHeader: false,
+    trailingSlash: true // NOTE: Where seamless image magic happens!
   }
 )

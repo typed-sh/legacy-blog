@@ -8,8 +8,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "export": "next build && next export && yarn node scripts/sitemap",
-    "lint": "eslint --ext .js"
+    "export": "next build && next export && yarn sitemap && yarn mkstatic",
+    "lint": "eslint --ext .js",
+    "sitemap": "yarn node scripts/sitemap",
+    "mkstatic": "yarn node scripts/mkstatic"
   },
   "dependencies": {
     "@chakra-ui/react": "^1.3.3",

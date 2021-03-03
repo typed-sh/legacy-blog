@@ -27,7 +27,8 @@ const Code = ({ children, className, ...rest }) => {
             className={className}
             style={{
               ...style,
-              backgroundColor: 'inherit'
+              backgroundColor: 'inherit',
+              overflowX: 'auto'
             }}
           >
             {tokens.map((line, i) => (
