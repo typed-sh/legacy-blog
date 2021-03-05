@@ -4873,7 +4873,7 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"mime-types@npm:^2.1.12, mime-types@npm:^2.1.27, mime-types@npm:~2.1.19, mime-types@npm:~2.1.24":
+"mime-types@npm:^2.1.12, mime-types@npm:^2.1.27, mime-types@npm:^2.1.29, mime-types@npm:~2.1.19, mime-types@npm:~2.1.24":
   version: 2.1.29
   resolution: "mime-types@npm:2.1.29"
   dependencies:
@@ -7332,6 +7332,7 @@ fsevents@~2.3.1:
     gray-matter: ^4.0.2
     js-yaml: ^4.0.0
     js-yaml-loader: ^1.2.2
+    mime-types: ^2.1.29
     next: ^10.0.7
     next-compose-plugins: ^2.2.1
     next-images: ^1.7.0
