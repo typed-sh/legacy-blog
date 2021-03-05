@@ -6,7 +6,7 @@ import {
 } from '@chakra-ui/react'
 
 const Img = props => {
-  const { src, alt } = Object.assign({}, props)
+  const { src, alt } = props
 
   return (
     <Center>
@@ -17,6 +17,7 @@ const Img = props => {
         shadow='md'
         borderRadius='md'
         crossOrigin='anonymous'
+        maxHeight='750px'
       />
     </Center>
   )
