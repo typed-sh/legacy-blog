@@ -1,12 +1,11 @@
 import * as React from 'react'
-import * as PropTypes from 'prop-types'
 import {
   Center,
   Image
 } from '@chakra-ui/react'
 
 const Img = props => {
-  const { src, alt } = props
+  const { src, alt } = Object.assign({}, props) // NOTE: DO NOT REMOVE THIS to retain the object during SSR;
 
   return (
     <Center>
@@ -21,11 +20,6 @@ const Img = props => {
       />
     </Center>
   )
-}
-
-Img.propTypes = {
-  src: PropTypes.string,
-  alt: PropTypes.string
 }
 
 export default Img
