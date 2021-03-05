@@ -7,7 +7,10 @@ const postsRoot = path.resolve(process.cwd(), 'contents', 'posts')
 const postList = post.getList()
 
 export default async (req, res) => {
-  const [slug, filename] = req.url.split('/').slice(-2)
+  const [slug, filename] = req.url
+    .split('?')[0]
+    .split('/')
+    .slice(-2)
   const assetPath = path.join(postsRoot, postList[slug], filename)
 
   if (!fs.existsSync(assetPath)) {
