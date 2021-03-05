@@ -144,7 +144,7 @@ export const getStaticProps = async ctx => {
       }
     })
     .sort((a, b) => {
-      return b.date - a.date
+      return b.data.date - a.data.date
     })
 
   return {
