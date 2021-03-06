@@ -85,7 +85,7 @@ const Page = ({ user, data, mdxModule }) => {
             width='1100px'
           >
             <Image
-              src={data.thumbnail}
+              src={'./' + data.thumbnail}
               alt={`Thumbnail image of ${data.title}.`}
               margin='45px 0'
               shadow='2xl'

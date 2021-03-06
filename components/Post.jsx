@@ -35,10 +35,13 @@ const Post = ({ user, data, ...props }) => {
             {
               data.thumbnail && (
                 <Image
-                  src={data.thumbnail}
+                  src={'/post/' + data.slug + '/' + data.thumbnail}
                   shadow='lg'
                   borderRadius='md'
                   crossOrigin='anonymous'
+                  htmlWidth='100%'
+                  maxHeight='150px'
+                  objectFit='cover'
                 />
               )
             }
