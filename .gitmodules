@@ -1,0 +1,3 @@
+[submodule "contents"]
+	path = contents
+	url = https://github.com/typed-sh/contents.git
