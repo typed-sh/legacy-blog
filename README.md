@@ -1,6 +1,10 @@
 # Typed.sh
 
-Typed.sh는 블로그입니다.
+Typed.sh is just a blog, __init__?
+
+- Built with latest technologies and ready to use CI and CD.
+- Seamless experience both static generation and Next server.
+- Beautiful next generation blog posting experience with MDX and Chakra-UI.
 
 ## Table of Contents
 
