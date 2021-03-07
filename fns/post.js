@@ -4,6 +4,8 @@ import matter from 'gray-matter'
 
 const postsRoot = path.resolve(process.cwd(), './contents/posts')
 
+export const groupSize = 10
+
 export const cache = {}
 
 export const getList = force => {
@@ -27,7 +29,17 @@ export const getList = force => {
 
   cache.list = result
 
-  return result
+  return cache.list
+}
+
+export const getGroupCount = force => {
+  if (cache.groupCount && !force) {
+    return cache.groupCount
+  }
+
+  cache.groupCount = Math.ceil(Object.keys(getList()).length / groupSize)
+
+  return cache.groupCount
 }
 
 export const bySlug = slug => {
