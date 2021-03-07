@@ -173,6 +173,8 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install dependencies
         run: yarn
+      - name: Build
+        run: yarn build && yarn export
       - name: Update submodules # Add this if you're managing contents with git repository.
         run: yarn update:submodules
       - uses: JamesIves/github-pages-deploy-action@3.6.2
