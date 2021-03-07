@@ -36,6 +36,7 @@ const Post = ({ user, data, ...props }) => {
               data.thumbnail && (
                 <Image
                   src={'/post/' + data.slug + '/' + data.thumbnail}
+                  fallbackSrc='../../static/thumbnails/another-warmness.png'
                   shadow='lg'
                   borderRadius='md'
                   crossOrigin='anonymous'

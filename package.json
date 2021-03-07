@@ -1,6 +1,6 @@
 {
   "name": "typedsh-blog",
-  "version": "1.0.0",
+  "version": "1.0.0-2",
   "main": "index.js",
   "author": "Seia-Soto <seia@outlook.kr>",
   "license": "MIT",
@@ -11,6 +11,12 @@
     "export": "next build && next export && yarn sitemap && yarn mkstatic",
     "serve": "serve out",
     "lint": "eslint --ext .js",
+    "release": "standard-version",
+    "release:first": "standard-version --first-release",
+    "release:pre": "standard-version --prerelease",
+    "release:minor": "standard-version --release-as minor",
+    "release:patch": "standard-version --release-as patch",
+    "release:major": "standard-version --release-as major",
     "sitemap": "yarn node scripts/sitemap",
     "mkstatic": "yarn node scripts/mkstatic"
   },
@@ -51,6 +57,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.3.1",
     "eslint-plugin-react": "^7.22.0",
-    "serve": "^11.3.2"
+    "serve": "^11.3.2",
+    "standard-version": "^9.1.1"
   }
 }

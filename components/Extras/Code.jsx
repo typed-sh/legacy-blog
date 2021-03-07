@@ -5,7 +5,7 @@ import Highlight, { defaultProps } from 'prism-react-renderer'
 
 import dracula from 'prism-react-renderer/themes/dracula'
 
-const Code = ({ children, className, ...rest }) => {
+const Code = ({ children, className = '', ...rest }) => {
   const language = className.replace(/language-/, '')
 
   return (

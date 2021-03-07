@@ -86,6 +86,7 @@ const Page = ({ user, data, mdxModule }) => {
           >
             <Image
               src={'./' + data.thumbnail}
+              fallbackSrc='../../static/thumbnails/another-warmness.png'
               alt={`Thumbnail image of ${data.title}.`}
               margin='45px 0'
               shadow='2xl'
