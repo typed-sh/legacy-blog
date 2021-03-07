@@ -171,6 +171,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: yarn
       - name: Update submodules # Add this if you're managing contents with git repository.
         run: yarn submodules:update
       - uses: JamesIves/github-pages-deploy-action@3.6.2
