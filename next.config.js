@@ -9,6 +9,10 @@ module.exports = withPlugins(
     rewrites: async () => {
       return [
         {
+          source: '/',
+          destination: '/page/1'
+        },
+        {
           source: '/sitemap.xml',
           destination: '/api/sitemap'
         },

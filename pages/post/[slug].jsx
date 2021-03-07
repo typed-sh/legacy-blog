@@ -42,7 +42,7 @@ const Page = ({ user, data, mdxModule }) => {
           images: [
             {
               url: data.thumbnail,
-              alt: `Thumbnail of ${data.title} on ${site.title}.`
+              alt: `Thumbnail of ${data.title} on ${site.name}.`
             }
           ]
         }}

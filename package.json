@@ -8,7 +8,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "export": "next build && next export && yarn sitemap && yarn mkstatic",
+    "export": "next export && yarn static",
     "serve": "serve out",
     "lint": "eslint --ext .js",
     "update": "yarn update:upstream && yarn update:submodules",
@@ -21,8 +21,10 @@
     "release:minor": "standard-version --release-as minor",
     "release:patch": "standard-version --release-as patch",
     "release:major": "standard-version --release-as major",
+    "static": "yarn sitemap && yarn mkstatic && yarn packstatic",
     "sitemap": "yarn node scripts/sitemap",
-    "mkstatic": "yarn node scripts/mkstatic"
+    "mkstatic": "yarn node scripts/mkstatic",
+    "packstatic": "yarn node scripts/packstatic"
   },
   "dependencies": {
     "@chakra-ui/react": "^1.3.3",

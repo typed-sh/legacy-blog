@@ -1,8 +1,11 @@
 import * as React from 'react'
 import * as PropTypes from 'prop-types'
 import Head from 'next/head'
+import { useRouter } from 'next/router'
 import {
   Box,
+  Button,
+  ButtonGroup,
   IconButton,
   Heading,
   Image,
@@ -11,6 +14,8 @@ import {
   HStack,
   Text,
   Divider,
+  Flex,
+  Spacer,
   Input,
   InputGroup,
   InputLeftElement,
@@ -18,29 +23,31 @@ import {
 } from '@chakra-ui/react'
 import {
   RiFileSearchLine,
+  RiArrowLeftLine,
   RiArrowRightLine
 } from 'react-icons/ri'
 
-import Container from '../components/Container'
-import Footer from '../components/Footer'
-import Post from '../components/Post'
+import Container from '../../components/Container'
+import Footer from '../../components/Footer'
+import Post from '../../components/Post'
 
-import * as author from '../fns/author'
-import * as post from '../fns/post'
-import * as site from '../fns/site'
+import * as author from '../../fns/author'
+import * as post from '../../fns/post'
+import * as site from '../../fns/site'
 
-import useInput from '../hooks/useInput'
+import useInput from '../../hooks/useInput'
 
 const Page = props => {
   const { colorMode } = useColorMode()
   const [search, setSearch] = useInput()
+  const router = useRouter()
 
   const searchOnGoogle = () => {
     if (!search) {
       return
     }
 
-    window.location = 'https://www.google.com/search?q=' + encodeURIComponent('site:typed.sh ' + search)
+    window.location = 'https://www.google.com/search?q=' + encodeURIComponent('site:' + site.url + ' ' + search)
   }
 
   return (
@@ -67,7 +74,7 @@ const Page = props => {
             <Heading
               size='2xl'
             >
-              Typed.sh
+              {site.name}
             </Heading>
           </Center>
           <Text
@@ -78,7 +85,7 @@ const Page = props => {
                 : 'gray.300'
             }
           >
-            Just a blog, __init__?
+            {site.description}
           </Text>
           <HStack
             paddingTop='25px'
@@ -121,6 +128,33 @@ const Page = props => {
             })
           }
         </VStack>
+        <Flex>
+          <Spacer />
+          <ButtonGroup direction='row' spacing={2}>
+            {
+              props.groups.current > 1 && (
+                <Button
+                  leftIcon={<RiArrowLeftLine />}
+                  variant='outline'
+                  onClick={() => router.push('/page/' + (props.groups.current - 1))}
+                >
+                  Previous
+                </Button>
+              )
+            }
+            {
+              props.groups.current < props.groups.total && (
+                <Button
+                  rightIcon={<RiArrowRightLine />}
+                  variant='solid'
+                  onClick={() => router.push('/page/' + (props.groups.current + 1))}
+                >
+                  Next
+                </Button>
+              )
+            }
+          </ButtonGroup>
+        </Flex>
       </Container>
       <Footer />
     </>
@@ -128,12 +162,28 @@ const Page = props => {
 }
 
 Page.propTypes = {
-  posts: PropTypes.array
+  posts: PropTypes.array,
+  groups: PropTypes.object
 }
 
-export const getStaticProps = async ctx => {
+export const getStaticProps = ctx => {
+  const page = (Number(ctx.params.page) || 1) - 1
+
+  if (isNaN(page) || page < 0) {
+    return {
+      props: {
+        posts: []
+      }
+    }
+  }
+
+  const groupCount = post.getGroupCount()
+  const startSize = page * post.groupSize
+  const endSize = startSize + post.groupSize
+
   const posts = Object
     .keys(post.getList())
+    .slice(startSize, endSize)
     .map(slug => {
       const { data } = post.bySlug(slug)
       const user = author.byId(data.author)
@@ -149,8 +199,30 @@ export const getStaticProps = async ctx => {
 
   return {
     props: {
-      posts
+      posts,
+      groups: {
+        current: page + 1,
+        total: groupCount
+      }
     }
+  }
+}
+
+export const getStaticPaths = () => {
+  const pages = post.getGroupCount()
+  const paths = []
+
+  for (let i = 1; i <= pages; i++) {
+    paths.push({
+      params: {
+        page: String(i)
+      }
+    })
+  }
+
+  return {
+    paths,
+    fallback: false
   }
 }
 
