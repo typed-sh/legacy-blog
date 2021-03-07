@@ -1,0 +1,42 @@
+---
+title: Twitch 방송 확인 by Twitch API
+author: kwabang
+date: 2020-05-18
+sort: Twitch 방송 알림을 디스코드로 전송하는 로직을 짜다 보니 일단 방송이 Online 인...
+thumbnail: ../../static/thumbnails/another-warmness.png
+---
+
+Twitch 방송 알림을 디스코드로 전송하는 로직을 짜다 보니 일단 방송이 Online 인지 Offline 인지 확인하는 방법이 필요했습니다.
+친절하게도...?
+Twitch에서 API를 제공 중이었습니다.
+이번에는 어떻게 Twitch API를 사용하는지 다루어보겠습니다.
+
+# API 사용을 위한 응용 프로그램 등록
+
+Twitch Developers Console에 Twitch 계정으로 로그인합니다.
+접속한 후 응용 프로그램에 내 응용 프로그램 등록을 선택합니다.
+이름과 범주는 스스로 입력하시면 되고 OAuth 리디렉션 URL에는 http://localhost 를 입력 후 만들기 를 선택합니다.
+
+성공적으로 등록되었다면 응용 프로그램 목록으로 redirect 됩니다.
+목록에 등록된 응용프로그램의 관리를 선택 후 클라이언트 ID 를 복사합니다.
+
+# 인증 방식
+
+Client-ID는 응용 프로그램에 클라이언트 ID 만 있으면 되지만 Bearer token는 발급 과정이 필요합니다.
+
+- Bearer token 발급
+- 아까 응용 프로그램 관리에서 신규 시크릿을 선택하여 발급받습니다. 그리고 아래 코드를 통해 access_token 을 발급받습니다. (expires_in 는 만료시간입니다.)
+
+```js
+requests.post('https://id.twitch.tv/oauth2/token?client_id=<클라이언트 ID>&client_secret=<클라이언트 시크릿>&grant_type=client_credentials').json()
+```
+
+# API 요청
+
+```js
+data = requests.get('https://api.twitch.tv/helix/streams?user_login=<채널ID>',headers={'Authorization': 'Bearer <access_token>','Client-ID':'<클라이언트 ID>'}).json()
+if data["data"] != []:
+	print('Online') #Online
+else:
+	print('Offline') #Offline
+```

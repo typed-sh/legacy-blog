@@ -1,0 +1,194 @@
+---
+title: Rsync로 미러 서버 구축하기
+author: seia
+date: 2020-09-27
+sort: 이번 글에서는 직접 Rsync를 사용하여 직접 Alpine 미러 서버를 구축하는 방법에 대...
+thumbnail: rsyncro-mireo-seobeo-gucughagi.png
+---
+
+이번 글에서는 직접 Rsync를 사용하여 직접 Alpine 미러 서버를 구축하는 방법에 대한 다룹니다.
+얼마 전에 Alpine Linux를 정말 좋아하게 되었기 때문에 모 위키에 문서를 남기기도 하였고 이번 Alpine 미러 서버도 Alpine Linux 위에서 구축하게 되었습니다.
+
+# 시작하기 전에
+
+## 미러 서버 운영 시 주의사항
+
+시작하기 전에, 미러 서버 운영에 따른 책임에 대해 간단히 설명합니다.
+
+### 책임감
+
+미러 서버는 속도가 느린 지역을 위해 사용자층 혹은 운영 측에서 직접 해당 지역에 가까운 edge 포크 서버를 두는 것입니다.
+이는 여러분의 미러 서버 사용자에 대하여 오랜 기간 지원을 해주어야 한다는 것을 의미합니다.
+그 이유는 미러 서버를 운영함으로써 사용자가 생겨나면 해당 사용자의 서버에 관여하게 되므로 해당 사용자의 서버가 운영하고 있는 서비스에 직접적으로 영향을 미칠 수 있습니다.
+오랫동안 미러 서버를 운영할 계획이 없다면 자신만의 용도나 테스트 용도 외에 실제 운영을 하고 공식적인 리스트에 등록하시는 것은 좋지 않습니다.
+
+### 보안
+
+동시에 여러분의 미러 서버는 안전해야 합니다.
+위에서 말하였듯이 다른 서버에 직접적으로 영향을 미칠 수 있는 서비스이기 때문입니다.
+혹여나 서버가 외부에 노출되어 특정 파일이 변조된다면 그 파일을 사용하는 모든 서버는 루트킷 등의 바이러스의 감염 위험에 노출되는 것입니다.
+
+### 트래픽 및 자원 소모
+
+미러 서버는 말 그대로 다운로드 받는 소스의 대체제이기 때문에 여러분의 서버는 공공의 이익을 목적으로하여금 많은 트래픽을 소모할 수 있습니다.
+이는 그대로 네트워크에 부하를 주고 여러분의 네트워크를 망가뜨릴 수도 있습니다.
+또한 공공의 이익 보장을 위하여 지속적인 안정성과 넉넉한 트래픽 용량을 제공해야 합니다.
+
+## Rsync와 HTTP 클라이언트의 차이
+
+Rsync를 사용해보신 분들이라면 아시겠지만 일반적인 HTTP 요청보다는 Rsync가 배로 느릴때도 있을만큼 속도에 차이가 납니다.
+하지만 이는 Rsync가 최대의 효율을 내기 위해 파일 해시 등을 계산하여 상대방 Rsync 서버와 통신하는 과정이 포함되어 있기 때문에 실제로 첫 포크 이후에 발생하는 트래픽량이 낮고 파일의 버전 구분 정확도는 훨씬 높습니다.
+
+또한 파일 자체의 신뢰도도 훨씬 높습니다.
+그 이유는 기본적으로 Rsync는 동기화가 끝나기 전까지 새로운 파일로 대체하지 않기 때문입니다.
+업데이트 중에 누군가가 패키지를 설치하거나 업그레이드한다면 예기치 않은 오류를 일으킬 수 있습니다.
+
+# 스크립트 작성하기
+
+```sh
+#!/usr/bin/env sh
+
+echo -e "[$(date)] - <alpinelinux> sync is about to start" >> /_seia/projects/mirror/log
+
+# make sure we never run 2 rsync at the same time
+lockfile="/tmp/alpine-mirror.lock"
+if [ -z "$flock" ] ; then
+  exec env flock=1 flock -n $lockfile "$0" "$@"
+  echo -e "[$(date)] - <alpinelinux> stopped the sync because there is lockfile" >> /_seia/projects/mirror/log
+fi
+
+src=rsync://rsync.alpinelinux.org/alpine/
+dest=/_seia/ext/sdb1/projects/mirror/sources/alpinelinux/
+
+exclude="--include-from=/_seia/projects/mirror/includes/alpinelinux.includes --exclude */"
+
+mkdir -p "$dest"
+/usr/bin/rsync \
+        --archive \
+        --update \
+        --hard-links \
+        --delete \
+        --delete-after \
+        --delay-updates \
+        --timeout=600 \
+        --progress \
+        $exclude \
+        "$src" "$dest"
+
+echo -e "[$(date)] - <alpinelinux> mirror has been synced" >> /_seia/projects/mirror/log
+```
+
+위 스크립트는 제가 Alpine Linux의 공식 위키 문서를 참고하여 다시 만든 스크립트 파일로 특정 디렉터리만 포크할 수 있도록 하였습니다.
+위 스크립트에서 신경써야 할 요소는 src와 dest 변수 그리고 로그 파일의 경로 등이 있습니다.
+저와 같은 경우는 로그 파일을 사용하여 크론이 정확히 동작하고 있는지 살펴봅니다.
+그리고 mkdir -p `path` 명령어를 통해 src와 dest 폴더가 모두 존재하도록 해주세요.
+
+## includes 파일
+
+Rsync에서 동기화할 디렉터리 목록을 위치한 것으로 나머지 폴더는 기본적으로 --exclude */ 문을 통해 제외됩니다.
+여러분은 이 includes 파일(파일 확장자는 직접 명명한 것입니다)로 포크할 버전을 선택하시면 됩니다.
+위 공식 문서에는 현재 필요한 저장공간의 양도 적혀져 있으니 참고바랍니다.
+
+```
+edge**
+v3.12**
+```
+
+저와 같은 경우는 edge와 v3.12 브랜치만 동기화하기로 결정했기에 위와 같이 서술하였습니다.
+
+# 준비하고 배포하기
+
+## Cron 작업으로 등록하기
+
+Alpine Linux에서는 간단히 Cron 작업으로 등록할 수 있습니다.
+/etc/periodic/`period` 폴더에 여러분의 쉘 파일을 복사하면 됩니다.
+단, executable로 만들고 확장자를 없애야 정상적으로 등록됩니다.
+기본적으로 periodic 디렉토리에는 다음과 같은 폴더들이 있습니다.
+
+- 15min
+- daily
+- hourly
+- monthly
+- weekly
+
+여러분의 서버가 적당히 부하를 견딜만한 정도로 설정하시면 됩니다.
+또한 처음 동기화가 끝나면 앞으로 여러번 같은 파일을 다운로드할 필요가 없으므로 '하루' 정도의 주기로 설정하시는 것이 미러 서버의 버전을 최신으로 유지하는데에 도움이 됩니다.
+(위 스크립트에서는 이미 lock 파일을 통해 중복적으로 rsync가 동작하는 것을 막아줍니다) 아래 명령으로 파일을 실행가능한 상태로 만들고 원하시는 기간의 디렉터리로 복사해주세요.
+
+```sh
+chmod +x filename
+cp filename /etc/periodic/`period`
+```
+
+복사를 완료하면 정확히 준비가 되었는지 run-parts 명령으로 확인할 수 있습니다.
+
+```sh
+x-satellite:/etc/periodic# run-parts --test ./hourly/
+./hourly/alpinelinux-mirror
+./hourly/ubuntu-releases-mirror
+```
+
+## Nginx로 미러 서버 배포 시작하기
+
+이제 파일이 준비되었다면(Rsync에서는 모든 파일의 변경 사항의 적용이 동기화가 끝난 이후에 적용됩니다) 이제 Nginx를 통해 배포해보도록 하겠습니다.
+먼저 Nginx를 설치합니다.
+아래 명령어를 사용하면 자동으로 캐시를 무시하므로 apk update 명령을 사용할 필요가 없습니다.
+
+```sh
+apk add nginx -U
+```
+
+그리고 기본적으로 default_server에 대한 작업 처리를 방지합니다.
+default_server는 언제나 예상치 못한 취약점을 제공할 수 있습니다.
+설정 파일은 /etc/nginx/conf.d 폴더에서 찾으실 수 있습니다.
+
+```
+# This is a default site configuration which will simply return 404, preventing
+# chance access to any other virtualhost.
+
+server {
+        listen 80 default_server;
+        listen [::]:80 default_server;
+
+        # Everything is a 444
+        location / {
+                return 444;
+        }
+}
+```
+
+그 다음 static한 파일을 배포할 가상 호스트 파일을 하나 만들어줍니다.
+아래 가상 호스트 파일에서 `domain`과 `dir` 부분을 여러분의 것으로 교체하세요.
+
+- `domain`: 여러분이 운영에 사용할 도메인
+- `dir`: 여러분이 동기화한 파일들의 위치
+
+또한 아래 파일은 자동으로 클라이언트의 동시 접속 연결 수를 3개로 제한합니다. 이는 공공에게 효율적인 자원배분을 돕습니다.
+
+```
+limit_conn_zone $binary_remote_addr zone=addr_connlimit_mirror:10m;
+
+server {
+        listen 80;
+
+        server_name `domain`;
+
+        location / {
+                root `dir`;
+
+                try_files $uri $uri/ 404;
+                autoindex on;
+                limit_conn addr_connlimit_mirror 3;
+        }
+}
+```
+
+글의 취지와 맞지 않아 여기에서 HTTPS 구현은 다루지 않도록 하겠습니다.
+마지막으로 아래와 같이 Nginx 설정 파일을 테스트하고 프로세스를 재시작해주시면 됩니다.
+
+```sh
+nginx -t
+service nginx start
+```
+
+모두 완료되면 웹 브라우저에서 아래와 같은 화면을 볼 수 있습니다.

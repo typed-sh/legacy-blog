@@ -1,0 +1,186 @@
+---
+title: Qbittorrent-nox로 우분투에서 토렌트 서버 구축하기
+author: gokoro
+date: 2020-06-07
+sort: 토렌트를 자신의 PC에서 직접 돌리는 것 보다는, VPS등 따로 서버에서 돌리는 것이 프라...
+thumbnail: ../../static/thumbnails/another-warmness.png
+---
+
+토렌트를 자신의 PC에서 직접 돌리는 것 보다는, VPS등 따로 서버에서 돌리는 것이 프라이버시 측면에서는 훨씬 안전한 방법입니다.
+토렌트를 사용하면 필연적으로 노출될 수 밖에 없는 자신의 IP주소를 보호할 수 있기 때문이죠.
+
+이번에는 토렌트 클라이언트 중 하나인 Qbittorrent에서 제공하는 Web UI 기능을 통하여 VPS에 토렌트 서버를 구축해보겠습니다.
+
+## Environment
+
+- Ubuntu 18.04.3 LTS on Oracle Cloud (VPS)
+
+## Qbittorrent-nox 설치하기
+
+GUI 환경에서는 클릭 몇 번으로 Qbittorrent를 설치하여 Web UI를 설정하는 것이 가능하지만, CLI 환경에서는 그리 호락호락 하지 않습니다.
+다행히도 Qbittorrent는 이런 서버 환경을 위해 Web UI를 위한 Qbittorrent-nox 패키지를 마련해놨습니다.
+
+아래의 명령어를 차례로 실행하여 Qbittorrent-nox를 설치하세요.
+
+```sh
+$ sudo add-apt-repository ppa:qbittorrent-team/qbittorrent-stable
+$ sudo apt install qbittorrent-nox
+```
+
+qBittorrent-nox를 데몬으로 돌리기 위하여 서비스에 등록하는 작업이 필요합니다.
+
+```sh
+$ sudo nano /etc/systemd/system/qbittorrent-nox.service
+```
+
+편집기를 열고, 다음의 내용을 등록한 후 저장합니다:
+
+```
+[Unit]
+Description=qBittorrent-nox Daemon Service
+After=network.target
+
+[Service]
+Type=forking
+User=root
+ExecStart=/usr/bin/qbittorrent-nox -d --webui-port=3172
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+```
+
+편의상 유저를 root로 설정하였지만, 보안을 위해서는 별도의 유저를 생성하여 그 유저를 통해 서비스를 관리하는 것이 권장됩니다.
+
+Qbittorrent-nox를 부팅 시 자동으로 실행되게 하고, 데몬을 실행시킵니다.
+
+```sh
+$ sudo systemctl enable qbittorrent-nox && sudo systemctl start qbittorrent-nox
+```
+
+## Nginx로 리버스 프록시 설정하기
+
+지금 바로 서버의 IP로 접속하여 Qbittorrent를 사용할 수도 있지만, Nginx를 통해 리버스 프록시를 설정하면 보안 측면에서 더욱 안전하게 웹 애플리케이션을 구성할 수 있습니다.
+
+다음의 명령을 실행하여 Nginx를 설치합니다:
+
+```sh
+$ sudo apt install nginx
+```
+
+Nginx 가상 호스트 구성 파일을 생성합니다. `domaint.tld` 부분을 사용하고자 하는 자신의 도메인으로 바꾸어 주세요.
+
+```sh
+$ sudo nano /etc/nginx/sites-available/`domaint.tld`
+```
+
+다음의 내용을 붙혀넣습니다.
+
+```
+server {
+  server_name <domain_tld>;
+
+    location / {
+      proxy_pass http://127.0.0.1:3172/;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header Host $http_host;
+      proxy_set_header X-NginX-Proxy true;
+      proxy_redirect off;
+    }
+}
+```
+
+위에서 서비스를 생성할 때 Web UI의 포트를 3172로 지정했으므로, 프록시도 같이 3172 포트로 설정하였습니다.
+
+sites-enabled 폴더에 sites-available에 생성된 설정 파일을 향하는 symlink를 생성합니다.
+
+```sh
+$ sudo ln -s /etc/nginx/sites-available/`domaint.dl` /etc/nginx/sites-enabled/`domaint.tld`
+```
+
+다음의 명령으로 문법에 이상이 없는지 확인합니다.
+
+```sh
+$ sudo nginx -t
+
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+```
+
+설정 파일의 문법에 이상이 없다면 마지막으로 Nginx 서비스를 재시작 합니다.
+
+```sh
+$ sudo service nginx restart
+```
+
+소유한 도메인의 DNS 설정 사이트로 이동하여 A레코드를 아까 설정하신 도메인으로 맞춰주세요.
+
+## Let's Encrypt 인증서 발급받기
+
+Let's Encrypt를 사용해서 Qbittorrent를 위해 SSL 인증서를 발급받을 수 있습니다.
+Nginx로 리버스 프록시를 구성했으므로 인증서 발급은 훨씬 간단해집니다.
+
+Let's Encrypt 인증서 발급을 쉽게 수행할 수 있게 Certbot 패키지를 사용하겠습니다.
+다음의 명령으로 Certbot을 설치해 주세요.
+
+```sh
+$ sudo add-apt-repository ppa:certbot/certbot
+$ sudo apt install certbot python3-certbot-nginx
+```
+
+다음의 명령을 실행해 인증서를 발급 받습니다. domain.tld 부분에 아까 등록한 도메인을 입력해주세요:
+
+```sh
+$ sudo certbot -d domain.tld --nginx
+```
+
+처음 발급 시 이메일, 약관을 물을 수 있습니다. 잘 보고 본인의 이메일과 Y 또는 N으로 입력해주시면 됩니다.
+
+인증서 발급과 동시에 적용까지 완료될 것 입니다. 과정이 완료되고 나면 곧바로 SSL 환경으로 Qbittorrent Web UI에 접속하실 수 있습니다.
+
+설정한 주소로 접속하면 위와 같은 로그인 UI를 볼 수 있습니다. 초기 아이디는 admin, 패스워드는 adminadmin 입니다.
+보안을 위해 Options에서 아이디와 패스워드를 변경하는 것을 추천드립니다.
+
+## Web UI 테마 변경하기
+
+이제 Qbittorrent의 모든 기능을 Web에서 사용할 수 있게 되었지만, 디자인이 너무 구식처럼 보여 영 마음에 들지 않습니다.
+Qbittorrent는 Web UI에서의 Custom Theme를 지원해서 UI의 디자인을 간단하게 변경할 수 있습니다.
+
+여기에서는 Vue.js 프레임워크로 만들어진 VueTorrent 테마를 설치하려 합니다.
+
+다음의 명령을 실행해서 테마를 다운로드하고 압축을 푸세요:
+
+```sh
+$ cd /home/qbittorrent-nox/
+$ wget https://github.com/WDaan/VueTorrent/releases/download/dev-v0.1.0/release.zip
+$ unzip release.zip
+```
+
+압축을 풀면 vuetorrent폴더가 생성되었을 것 입니다. 폴더 구조는 다음과 같습니다.
+
+```sh
+$ ll vuetorrent/
+total 12
+drwxr-xr-x 3 root            root            4096 Jun  6 13:46 ./
+drwxr-xr-x 9 qbittorrent-nox qbittorrent-nox 4096 Jun  6 04:14 ../
+drwxr-xr-x 4 root            root            4096 Jun  6 03:39 public/
+```
+
+Qbittorrent Web UI에 들어가서 Options > Web UI > Use alternative Web UI에 체크하고, Files location를 /home/qbittorrent-nox/vuetorrent로 바꿉니다.
+
+혹시 UI Language를 한국어로 설정하셨다면, English로 다시 바꾸어주세요.
+한국어로 설정되어있을 경우 테마 설치가 제대로 되지 않을 수 있습니다.
+
+모두 완료한 후에는 Save를 눌러 변경사항을 적용해주세요.
+
+Vuetorrent 테마가 적용되었습니다.
+이전보다 UI가 훨씬 깔끔해졌습니다.
+
+혹시 다른 테마를 설치하시길 원하시면, 이 곳에서 더 많은 테마를 찾으실 수 있습니다.
+적용 방법은 크게 다르지 않습니다.
+
+## Reference
+
+- https://www.linuxbabe.com/ubuntu/install-qbittorrent-ubuntu-18-04-desktop-server
+- https://typed.sh/install-ghost-blog-manually-on-your-server/#nginx-

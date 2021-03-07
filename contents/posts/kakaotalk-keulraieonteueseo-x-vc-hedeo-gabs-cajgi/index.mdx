@@ -1,0 +1,316 @@
+---
+title: Kakaotalk 클라이언트에서 X-VC 및 기기 관련 헤더와 데이터 찾기
+author: seia
+date: 2020-06-25
+sort: 오늘은 그동안 많은 사람들이 찾고 헤멧지만 인터넷에서는 절대로 찾을 수 없었던 비공개 AP...
+thumbnail: kakaotalk-keulraieonteueseo-x-vc-hedeo-gabs-cajgi.png
+---
+
+오늘은 그동안 많은 사람들이 찾고 헤멧지만 인터넷에서는 절대로 찾을 수 없었던 비공개 API 요청에서 드러나는 X-VC 헤더를 찾고 조금 더 나아가보는 글을 써볼 예정입니다.
+비공식적인 개발을 꽤나 좋아하는 저로서는 희소식이 아닐 수 없었습니다. 사실 처음부터 이렇게 찾을 걸 했습니다.
+
+# LOCO 프로토콜
+
+제가 알기로는 제 예상보다 꽤 많은 사람들이 이미 카카오톡 내부의 API를 다루고 있었습니다.
+'겁나 빠른 황소 프로젝트'로 잘 알려진 LOCO 프로토콜(TLS, HTTPS 암호화 Body를 포함할 수 있음)도 한 몫을 했다고 생각합니다.
+간단히 LOCO 프로토콜에 대해서 설명하자면 이는 속도와 효율을 목적으로 한 경량화 HTTP 프로토콜입니다.
+아래와 같이 2018년도 if(kakao) 컨퍼런스의 카카오톡 톡 메세징 파트 유용하님의 슬라이드처럼 프로토콜은 지난 몇 년간 큰 변화없이 계속 운영되어 왔습니다.
+
+또한 카카오톡이 그들의 데스크톱 및 모바일 클라이언트에 서버의 인증서를 임베딩하여 SSL Pinning 기법을 통해 단순 MITM 공격으로는 찾을 수 없었으나 세상에 우회할 수 없는 것이 무엇이 있을까요?
+
+하지만 제가 알기로는 2016년 쯔음에는 API 레퍼런스가 상당 부분 변경된 것으로 알고 있습니다.
+또한 이 변화들이 수많은 기존 카카오톡 비공식 API를 사용하던 애플리케이션들에 영향을 끼치게 되었습니다.
+그리고 그 중 한 가지가 API 요청에 포함되는 X-VC 값이라고 생각합니다.
+이 X-VC 헤더는 예측불가능한 해시의 일부로 많은 사람들이 추측하고 지속적으로 검출해보려 노력했으나 결과적으로 인터넷에 관련 자료가 존재하지 않는 것을 보아 아직까지 미지수의 영역인가 봅니다.
+
+# X-VC 헤더
+
+## 역할 찾기
+
+기본적으로 이 VC 키워드를 가진 헤더는 카카오 API에서 모니터링이나 특정 애플리케이션의 접근 키 혹은 ID, Token과 같은 역할을 하는 것으로 예측했습니다.
+마치 보통의 RESTful한 API에서 Bearer Token의 역할을 하는 것과 마찬가지죠.
+하지만 추후 리버스 엔지니어링을 통해 카카오에서 이를 잘 활용하여 텔레메트리를 할 수 있다는 결론을 내게 되었습니다.
+자세한 내용은 현재 글에서 다룰 예정입니다.
+
+## 알고리즘 찾기
+
+이 X-VC 값을 추출하는 방법으로 크게 2가지를 생각했습니다.
+
+- MITM Proxy 서버를 타 네트워크 노드 및 Rooting 혹은 Jailbreaking을 통해 기기 내부에 설치 후 패킷 스니핑 (SSL Pinning Bypass와 서버에 가짜 인증서 설치 등의 작업을 요함)
+- 애플리케이션 소스코드를 디컴파일링한 후에 해당 함수 리버스 엔지니어링하기
+
+
+첫 번째 방법은 제가 비교적 최근에 한 번 Twitter에서 다루었던 내용입니다.
+트윗을 작성한 후에 보았는지는 모르겠으나 현재는 패치가 된 상태입니다.
+iOS 기기에서 MITM Proxy와 SSL Certificate를 설치 후 신뢰 설정한 후에 카카오톡의 특정 기능 접근 시에는 LOCO 프로토콜이 아닌 일반 HTTP 프로토콜로 X-VC 헤더가 전달된 케이스가 있었습니다.
+
+### 애플리케이션 소스코드 파헤치기
+
+Android 앱은 Java로 짜여집니다. Kotlin도 Java로 Translate됩니다.
+이러한 안드로이드 앱 소스코드는 C++나 Themida를 포함하는 카카오톡 데스크톱 혹은 iOS와 다르게 대부분을 읽을 수 있을 정도로 디컴파일링 가능합니다.
+하지만 사실 카카오 팀에서 얼마나 소스코드를 엮어놨던 간에 충분한 시간이 있다면 보통의 Android 앱같은 경우는 디컴파일링을 피할 수 없을 것입니다.
+또한 일부 소스코드는 IDA Pro를 길라잡이로 삼아 손쉽게 기능을 복구시킬 수 있습니다. 기본적으로 저는 다음의 도구를 가져왔습니다.
+
+- JADX
+- Dex2Jar
+- IDA Pro
+- Atom-Editor
+
+사실 디컴파일링까지는 많이 어렵지 않습니다.
+직접 다운로드 후 Java 환경 구성부터 디컴파일링을 해도 됩니다.
+또 온라인에서도 가능하더군요.
+저는 귀찮고 오래걸리는 작업을 별로 좋아하는 편이 아닙니다.
+그렇기 때문에 사이드 프로젝트로써 실제로 디컴파일링하고 해당하는 함수를 찾아나서기까지 꽤나 오랜 시간이 걸릴 것을 직감했고 바로 최신 버전의 디컴파일링을 그만두었습니다.
+소스코드가 난독화되어 있으면 직접 하나하나 찾아가거나 프로그램을 사용하더라도 생각(10분...? 정도의)보다 많은 시간이 소요됩니다.
+
+대신에 바로 구버전의 카카오톡 APK을 구해왔습니다.
+당시 최신 버전은 8.8.1이었는데 적당히 8.4.1 버전을 다운로드하여 JADX로 디컴파일링했습니다.
+그리고 Atom-Editor로 폴더를 열어 하나하나 들여다보기 시작했습니다.
+요즘은 알고리즘이 많이 발전했는지 의외로 텍스트 에디터의 폴더 내 모든 소스코드 검색 속도가 매우 빠릅니다.
+일단 기본적으로 카카오톡 관련 로직을 담고 있는 폴더를 찾아줍니다. (사실 필자는 Android 앱 개발을 할 줄 모릅니다!)
+
+Resources 폴더는 Static한 소스코드들이 들어있길래 일단 넘어가고 Sources 폴더에서 그대로 com, kakao 폴더로 차례대로 열어보았습니다.
+내부에 loco, secret 등 폴더가 있고 단순히 소스코드를 몇 번 정독하면서 정확히 찾아온 것이 맞다고 생각했습니다.
+그리고 앞에서 요즘 에디터의 검색 속도가 매우 빠르다고 했는데 맞는 것 같습니다.
+아래 사진에서도 볼 수 있듯이 8.4.1 버전은 상당히 디컴파일링이 많이 되어 있습니다.
+그리고 5초가 안 걸려 바로 X-VC 헤더로 보이는 것을 찾았습니다.
+
+그런데 쨔쟌! 네, 해시 함수가 포함되어 있고 게다가 16자로 짜르는 센스까지.
+사실 정말로 소스코드를 뜯지 않았다면 알 수 없는 조합이었네요.
+
+```java
+package com.kakao.talk.net.retrofit.service.account;
+
+import com.kakao.talk.p599o.C21395p;
+import com.kakao.talk.p599o.C21429w;
+import com.kakao.talk.util.C24002ag;
+import java.util.HashMap;
+import java.util.Locale;
+
+/* renamed from: com.kakao.talk.net.retrofit.service.account.p */
+/* compiled from: SignupHeader */
+public final class C20977p extends HashMap<String, String> {
+    private C20977p() {
+        Locale locale = Locale.US;
+        C21395p.m47960a();
+        put("X-VC", String.valueOf(C24002ag.m53816a(String.format(locale, "%s|%s|%s|%s|%s", new Object[]{"TEO", C21395p.m47949I(), "GILBERT", C21429w.m48110a().mo37140ag(), "KEVIN"}), "SHA-512").substring(0, 16)));
+    }
+
+    /* renamed from: a */
+    public static C20977p m46764a() {
+        return new C20977p();
+    }
+}
+
+```
+
+각각의 변수들을 나열하고 사이사이에 | 문자를 집어넣은 다음 이것의 SHA-512 해시 앞 16자를 가져오면 되는 작업입니다.
+IDA Pro를 켜면 사라질 제 메모리가 걱정되어 몇 개만 찾으면 되는 것 같아 직접 찾아보겠습니다.
+
+- TEO
+- C21395p.m47949I()
+- GILBERT
+- C21429w.m48110a().mo37140ag()
+- KEVIN
+
+#### com.kakao.talk.p599o.C21395p.m47949I<Function?>
+
+먼저 첫 번째 함수입니다.
+그냥 경로 따라서 import 되는 것 같으니 그대로 따라가줍니다.
+그럼 311번 줄에서 다음과 같은 소스코드를 얻을 수 있습니다.
+이미 잘 알려진 형태의 문자열입니다.
+
+```java
+    /* renamed from: I */
+    public static String m47949I() {
+        return String.format(Locale.US, "KT/%s An/%s %s", new Object[]{C9132a.m24941d(), Build.VERSION.RELEASE, Locale.getDefault().getLanguage()});
+    }
+```
+
+너무 잘 알려진 헤더 내용이니 제가 예상한대로 그냥 적겠습니다.
+딱히 더 들어갈 필요는 없을 것 같네요.
+맞춰 적으면 KT/{version} {systemArch}/{systemVersion} {language}와 같은 형태가 됩니다.
+가장 앞의 KT는 이동통신사가 아닌 Kakaotalk을 의미합니다.
+저와 같은 경우는 PC 버전에서 사용할 예정이니 KT/{version} win32/10.0 ko와 같은 형태로 다시 쓰겠습니다.
+
+#### com.kakao.talk.p599o.C21429w.m48110a<Function?>
+
+위와 같은 방식으로 찾아주니 1132번 줄에서 다음과 같은 소스코드를 볼 수 있었습니다.
+이 함수와 같은 경우에는 내부 서식을 확실히 해야 합니다만 기본적으로 010(?:\d{8})과 같은 형태를 가지고 있을 것입니다.
+
+```java
+    /* renamed from: ag */
+    public final String mo37140ag() {
+        return this.f58394a.mo34921b("rawPhoneNumber", (String) null);
+    }
+```
+
+아쉽게도 또 귀찮은 일이 일어났습니다.
+파일 상단에서 import 문을 찾으러 갔는데 82번 줄에서 더 복잡한 구문을 발견하고 그만 정신을 잃을 뻔했습니다.
+
+```java
+    /* renamed from: a */
+    public C19903a f58394a = new C19903a("KakaoTalk.perferences") {
+        /* renamed from: m */
+        public final Set<String> mo34928m() {
+            HashSet hashSet = new HashSet();
+            hashSet.add("installedApplicationVersionCode");
+            hashSet.add("smsRequestToken");
+            hashSet.add("exceed_request_sms");
+            hashSet.add("requestedPhoneNumbers");
+            hashSet.add("install_referrer");
+            return hashSet;
+        }
+    };
+```
+
+다행히 Java Docs를 보고 HashSet이 제가 생각하는 해시 함수가 아닌 일종의 집합을 표현하는 자료형이라는 것을 보고 다행스러움을 느꼈습니다.
+C19903a 클래스와 같은 경우에는 일단은 KakaoTalk.preferences라는 단어를 보고 일종의 Static config 스토어로 가정합니다.
+그래도 한 번 보고 가주는게 맞을 것 같습니다.
+뭔가 재밌는 것들이 많이 있을 거 같아요.
+23번 줄에서 import 구문을 찾았습니다.
+
+```java
+import com.kakao.talk.model.C19903a;
+```
+
+그럼 com.kakao.talk.model.C19903a의 35번 줄에서 함수 정의를 찾을 수 있습니다.
+
+```java
+    @SuppressLint({"CommitPrefEdits"})
+    public C19903a(String str) {
+        this.f54098a = this.f54101e.getSharedPreferences(str, 0);
+        this.f54099b = this.f54098a.edit();
+    }
+```
+
+현재 파트는 수많은 함수 관계를 다시 쫓아가는 과정으로 재미가 없습니다.
+
+같은 파일의 26번 줄에서 다시 com.kakao.talk.application.App의 m20475a 함수를 가져옵니다.
+
+```java
+/* renamed from: e */
+protected Context f54101e = App.m20475a();
+```
+
+com.kakao.talk.application.App의 13번 줄을 보면 null 처리가 되어 있고 이후 this로 값을 할당합니다.
+
+```java
+public class App extends C5207a implements C7089l, C7316d {
+
+    /* renamed from: c */
+    static final /* synthetic */ boolean f21966c = (!App.class.desiredAssertionStatus());
+
+    /* renamed from: d */
+    private static volatile App f21967d = null;
+
+    /* renamed from: a */
+    public C7096b f21968a;
+
+    /* renamed from: b */
+    public DispatchingAndroidInjector<Activity> f21969b;
+
+    /* renamed from: a */
+    public static App m20475a() {
+        if (f21966c || f21967d != null) {
+            return f21967d;
+        }
+        throw new AssertionError();
+    }
+
+    public void onCreate() {
+        f21967d = this;
+        super.onCreate();
+        this.f21968a = new AppDelegator(this);
+        this.f21968a.onCreate();
+    }
+
+    ...
+}
+```
+
+위에서 저는 Java 문법을 정확히 모르기 때문에 Google의 도움을 받았습니다.
+하지만 정확한 정보 수집을 위해서는 implements 키워드와 extends 키워드에 참조된 객체를 모두 살펴보아야 겠습니다.
+
+파일 상단에서 마찬가지로 import 구문을 찾아줍니다.
+
+```java
+import com.kakao.talk.C5207a;
+import com.kakao.talk.activity.C7089l;
+...
+import dagger.android.C7316d;
+```
+
+하지만 여기까지와도 별다른 성과가 없군요. 또한 extends 키워드의 C5207a 클래스의 경우 빈 클래스였으며 androidx 패키지를 사용하여 일종의 시스템 혹은 하위시스템 호환 레이어로 보였습니다.
+
+아쉽게도 제가 Android 시스템을 잘 아는 사람이 아니라서 여기까지 하고 대충 몇 가지 변수를 생각해보는 것으로 하겠습니다. 먼저 rawPhoneNumber에 대해서 다음과 같은 변수를 생각해냈고 아마 다음 중 한 가지일 것입니다.
+
+- 국가 코드를 포함한 -를 제외한 전화번호: +82 10abcdefgi
+- 국가 코드와 -을 제외한 전화번호: 010abcdefgi
+- Android 시스템 상의 전화번호
+
+하지만 카카오톡은 기본적으로 국내 뿐만 아닌 해외에서도 서비스되고 있기 때문에 2번째 변수는 먼저 탈락입니다.
+또한 시스템 전화번호와 계정이 일치하지 않더라도 로그인이 가능하기 때문에 이 때 변수는 첫 번째 옵션이 되겠습니다.
+굳이 구별하자면 국가 코드 앞에 +가 있느냐 그리고 국가 코드와 전화 번호 사이에 공백이 영향을 미치느냐 정도가 되겠습니다.
+
+#### com.kakao.talk.util.C24002ag.m53816a<Function?>
+
+마지막으로 SHA-512라는 문자열을 2번째 인자로 가지는 함수를 살펴보면 올바른 X-VC 헤더를 얻을 수 있을까 기대됩니다.
+67번 줄에서 다음과 같은 소스코드를 찾을 수 있었습니다.
+
+```java
+    /* renamed from: a */
+    public static String m53816a(String str, String str2) {
+        if (str == null) {
+            return null;
+        }
+        try {
+            byte[] bytes = str.getBytes();
+            MessageDigest instance = MessageDigest.getInstance(str2);
+            instance.reset();
+            instance.update(bytes);
+            return C24054bb.m53969a(instance.digest());
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
+```
+
+코드를 순서대로 살펴보면 먼저 첫 번째 인자(Template string)에서 바이트 코드를 가져옵니다.
+그 다음에는 MessageDigest 객체를 통해 암호화를 진행하는듯 하였지만 Java를 모르는 저에게 순간 내부 API를 또 뜯어야 하나 하는 생각이 들었지만 다행히 Java의 내장 모듈 쯔음에 위치하는 것 같습니다.
+그럼 생성자 키가 없는 SHA-512 해시 함수를 사용한다는 것과 해시에 사용할 데이터로 첫 번째 인자로 받은 문자열을 사용한다는 점이 확실하게 되었으니 함수 C24054bb를 추적합니다.
+
+#### com.kakao.talk.util.C24054bb.m53969a<Function?>
+
+그렇다면 마지막으로 이제 이 함수만 추적하면 끝이 납니다.
+
+```java
+/* renamed from: a */
+public static String m53969a(byte[] bArr) {
+    if (bArr == null) {
+        return null;
+    }
+    StringBuffer stringBuffer = new StringBuffer();
+    for (byte b : bArr) {
+        byte b2 = b & BinaryMemcacheOpcodes.PREPEND;
+        stringBuffer.append(f65235a[(b & 240) >> 4]);
+        stringBuffer.append(f65235a[b2]);
+    }
+    return stringBuffer.toString();
+}
+```
+
+중간에 BinaryMemcacheOpcodes 값은 Netty 유틸리티의 상수로 문서를 찾아보니 정적으로 15라는 값을 사용 중이었습니다.
+
+그리고 f65235a 변수에 대한 정의는 같은 파일의 29번 줄에서 찾으실 수 있습니다.
+
+```java
+    /* renamed from: a */
+    static final char[] f65235a = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+```
+
+## 구현하기
+
+마지막으로 "그럼 이제 X-VC 헤더를 만들어보겠습니다."같은 것은 하지 않겠습니다.
+나중에 시간이 된다면 괜찮은 코드를 올려보고 싶지만 시험기간도 중간에 껴있었고 여러가지 일이 겹쳐서 개인 사정 상 어쩔 수 없이 글을 여기에서 종료합니다.
+그러고보니 아직 검증도 해보지 않았네요... 빨리 시간이 생기면 해보고 싶습니다.

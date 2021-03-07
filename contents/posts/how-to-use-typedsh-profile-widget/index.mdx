@@ -1,0 +1,33 @@
+---
+title: Typed.sh의 프로필 위젯 사용하기
+author: gokoro
+date: 2020-05-23
+sort: 얼마 전 저는 Typed.sh의 비공식 프로필 위젯을 제작하였습니다. 이번 글에서는 이 프...
+thumbnail: ../../static/thumbnails/another-warmness.png
+---
+
+얼마 전 저는 Typed.sh의 비공식 프로필 위젯을 제작하였습니다.
+이번 글에서는 이 프로필 위젯의 사용법에 대해서 간단히 다뤄보겠습니다.
+
+## 간단한 사용법
+
+이 위젯은 iframe 태그를 통해 사용하고 계시는 사이트가 html 삽입 기능을 제공한다면 어느 사이트에서든 사용하실 수 있습니다.
+
+아래 코드에서 [your_username] 와 [your_image_src] 부분을 각각 자신의 Typed.sh 유저네임과 프로필 이미지 주소로 변경해주세요.
+
+```
+<iframe src="https://typed-widget.gokoro.me/?username=[your_username]&avatarurl=[your_image_src]" frameborder="0" style="overflow:hidden;height:100%;width:100%"></iframe>
+```
+
+원하시는 사이트에 HTML 형식으로 변경한 코드를 붙여넣으세요.
+
+## 고급 사용자를 위하여
+
+만약 위젯을 직접 자신의 서버에서 돌리고 싶으시다면, 다음의 Repo와 설명을 참고해주세요.
+
+https://github.com/gokoro/typed.me
+
+Repo를 Clone하고, yarn build 을 실행해 애플리케이션을 빌드하세요.빌드된 파일들을 당신의 웹서버에 업로드 하세요.
+iframe 태그를 이용해 위젯을 원하시는 사이트에 삽입하세요. 쿼리스트링이 username: your_username, avatarurl: your_image_src 의 형식이 되야 합니다.
+
+혹은 정적 페이지 호스팅을 위해 netlify나 vercel 같은 서비스를 사용하실 수 있습니다.
