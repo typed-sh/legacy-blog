@@ -12,7 +12,7 @@ jobs:
       - name: Install dependencies
         run: yarn
       - name: Update submodules
-        run: yarn submodules:update
+        run: yarn update:submodules
       - uses: amondnet/vercel-action@v20
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }} # Required

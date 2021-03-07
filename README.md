@@ -174,7 +174,7 @@ jobs:
       - name: Install dependencies
         run: yarn
       - name: Update submodules # Add this if you're managing contents with git repository.
-        run: yarn submodules:update
+        run: yarn update:submodules
       - uses: JamesIves/github-pages-deploy-action@3.6.2
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
