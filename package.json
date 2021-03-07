@@ -11,6 +11,10 @@
     "export": "next build && next export && yarn sitemap && yarn mkstatic",
     "serve": "serve out",
     "lint": "eslint --ext .js",
+    "update": "yarn update:upstream && yarn update:submodules",
+    "update:prepare": "git add remote upstream https://github.com/typed-sh/blog.git",
+    "update:upstream": "git stash && git pull upstream master && git stash apply && git stash drop",
+    "update:submodules": "git submodule init && git submodule update --remote --merge",
     "release": "standard-version",
     "release:first": "standard-version --first-release",
     "release:pre": "standard-version --prerelease",
@@ -18,8 +22,7 @@
     "release:patch": "standard-version --release-as patch",
     "release:major": "standard-version --release-as major",
     "sitemap": "yarn node scripts/sitemap",
-    "mkstatic": "yarn node scripts/mkstatic",
-    "postinstall": "git pull --recurse-submodules"
+    "mkstatic": "yarn node scripts/mkstatic"
   },
   "dependencies": {
     "@chakra-ui/react": "^1.3.3",
