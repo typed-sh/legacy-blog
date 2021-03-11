@@ -40,8 +40,12 @@ const Post = ({ user, data, ...props }) => {
                   shadow='lg'
                   borderRadius='md'
                   crossOrigin='anonymous'
-                  htmlWidth='100%'
-                  maxHeight='150px'
+                  height={[
+                    '200px',
+                    '175px',
+                    '150px'
+                  ]}
+                  width='100%'
                   objectFit='cover'
                 />
               )
