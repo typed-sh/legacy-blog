@@ -17,7 +17,6 @@ import * as site from '../fns/site'
 import theme from '../styles/theme'
 
 import '../styles/fonts.css'
-import '../styles/scrollbar.css'
 import '../styles/selection.css'
 
 const App = ({ Component, pageProps }) => {
