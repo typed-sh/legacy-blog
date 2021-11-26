@@ -2,6 +2,7 @@ import * as React from 'react'
 import * as PropTypes from 'prop-types'
 import dayjs from 'dayjs'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { NextSeo } from 'next-seo'
 import CryptoJS from 'crypto-js'
 import {
@@ -23,8 +24,11 @@ import MDXProvider from '../../components/MDXProvider'
 import * as author from '../../fns/author'
 import * as post from '../../fns/post'
 import * as site from '../../fns/site'
+import { domain } from '../../config'
 
 const Page = ({ user, data, mdxModule }) => {
+  const router = useRouter()
+
   return (
     <>
       <NextSeo
@@ -41,7 +45,7 @@ const Page = ({ user, data, mdxModule }) => {
           description: data.sort,
           images: [
             {
-              url: data.thumbnail,
+              url: `${domain}/post/${router.query.slug}/${data.thumbnail}`,
               alt: `Thumbnail of ${data.title} on ${site.name}.`
             }
           ]
