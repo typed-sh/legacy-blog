@@ -1,4 +1,4 @@
-const headers = [
+export const headers = [
   {
     name: 'Typed.sh',
     href: '/'
@@ -9,6 +9,4 @@ const headers = [
   }
 ]
 
-export {
-  headers
-}
+export const domain = 'http://localhost:3000'
